@@ -23,6 +23,7 @@ $baju = $koneksi->query("SELECT * FROM koleksi_baju ORDER BY created_at DESC");
             <th class="px-4 py-2 text-left">#</th>
             <th class="px-4 py-2 text-left">Gambar</th>
             <th class="px-4 py-2 text-left">Nama</th>
+            <th class="px-4 py-2 text-left">Deskripsi</th>
             <th class="px-4 py-2 text-left">Kategori</th>
             <th class="px-4 py-2 text-left">Ukuran</th>
             <th class="px-4 py-2 text-left">Deskripsi</th>
@@ -35,6 +36,7 @@ $baju = $koneksi->query("SELECT * FROM koleksi_baju ORDER BY created_at DESC");
               <td class="px-4 py-2"><?php echo $no++; ?></td>
               <td class="px-4 py-2"><img src="gambar/<?php echo $row['gambar']; ?>" alt="" class="w-16 h-16 object-cover rounded"></td>
               <td class="px-4 py-2"><?php echo $row['nama']; ?></td>
+              <td class="px-4 py-2"><?php echo $row['harga']; ?></td>
               <td class="px-4 py-2"><?php echo $row['kategori']; ?></td>
               <td class="px-4 py-2"><?php echo $row['ukuran']; ?></td>
               <td class="px-4 py-2"><?php echo $row['deskripsi']; ?></td>

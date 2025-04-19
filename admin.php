@@ -21,20 +21,26 @@
         <textarea name="deskripsi" id="deskripsi" rows="3" required class="mt-1 w-full border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
       </div>
 
-      <div>
+       <div>
         <label for="kategori" class="block text-sm font-medium text-gray-700">Kategori</label>
         <select name="kategori" id="kategori" required class="mt-1 w-full border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500">
-          <option value="Adat Jawa">Adat Jawa</option>
-          <option value="Adat Bali">Adat Bali</option>
-          <option value="Adat Sumatera">Adat Sumatera</option>
-          <option value="Adat Kalimantan">Adat Kalimantan</option>
+            <option value="Pernikahan">Pernikahan</option>
+            <option value="Wisuda">Wisuda</option>
+            <option value="Baju Adat Carnaval">Baju Adat Carnaval</option>
         </select>
-      </div>
+       </div>
+
 
       <div>
         <label for="ukuran" class="block text-sm font-medium text-gray-700">Ukuran</label>
         <input type="text" name="ukuran" id="ukuran" placeholder="S / M / L / XL" required class="mt-1 w-full border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500">
       </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">Harga Sewa (Rp)</label>
+        <input type="number" name="harga" class="mt-1 block w-full border rounded-md p-2" required>
+      </div>
+
 
       <div>
         <label for="gambar" class="block text-sm font-medium text-gray-700">Upload Gambar</label>

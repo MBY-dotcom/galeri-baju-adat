@@ -5,6 +5,8 @@ $nama = $_POST['nama'];
 $kategori = $_POST['kategori'];
 $ukuran = $_POST['ukuran'];
 $deskripsi = $_POST['deskripsi'];
+$harga = $_POST['harga'];
+
 
 // Upload gambar
 $nama_file = $_FILES['gambar']['name'];
@@ -15,8 +17,8 @@ $folder_upload = "gambar/";
 move_uploaded_file($lokasi_tmp, $folder_upload . $nama_file);
 
 // Simpan data ke database
-$simpan = $koneksi->query("INSERT INTO koleksi_baju (nama, kategori, ukuran, deskripsi, gambar, created_at) 
-VALUES ('$nama', '$kategori', '$ukuran', '$deskripsi', '$nama_file', NOW())");
+$simpan = $koneksi->query("INSERT INTO koleksi_baju (nama, kategori, ukuran, deskripsi, harga, gambar, created_at) 
+VALUES ('$nama', '$kategori', '$ukuran', '$deskripsi', '$harga', '$nama_file', NOW())");
 
 // Redirect ke admin_list
 if ($simpan) {
