@@ -182,9 +182,8 @@ $baju = $koneksi->query($query);
   </section>
 
 <!-- KOLEKSI + FILTER -->
-<main class="container mx-auto px-4 py-12" id="galeri">
-  <h3 class="text-2xl font-semibold mb-6 text-center text-[#5c2c06]">Koleksi Baju Adat</h3>
-
+<main class="container mx-auto px-4 py-2 scroll-mt-16" id="galeri">
+  <h3 class="text-2xl font-semibold mb-2 text-center text-[#5c2c06]">Koleksi Baju Adat</h3>
   <!-- FILTER KATEGORI -->
   <div class="text-center mb-12">
     <p class="text-gray-600 text-sm md:text-base mx-auto mb-8">
@@ -202,7 +201,7 @@ $baju = $koneksi->query($query);
       foreach ($kategori_list as $kategori => $ikon) :
         $is_active = ($kategori_aktif == $kategori);
       ?>
-        <a href="index.php?kategori=<?= urlencode($kategori); ?>" class="relative group filter-link flex items-center gap-2 <?= $is_active ? 'text-[#a0522d]' : '' ?>">
+        <a href="index.php?kategori=<?= urlencode($kategori); ?>#galeri" class="relative group filter-link flex items-center gap-2 <?= $is_active ? 'text-[#a0522d]' : '' ?>">
           <i class="fa-solid <?= $ikon ?>"></i>
           <?= str_replace('Baju Adat ', '', $kategori); ?>
           <span class="underline-hover absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-[3px] rounded-full transition-all duration-300 <?= $is_active ? 'opacity-100 scale-100' : 'opacity-0 scale-0 group-hover:opacity-50 group-hover:scale-100' ?>"></span>
