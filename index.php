@@ -151,94 +151,56 @@ $baju = $koneksi->query($query);
       opacity: 1 !important;
     }
 
-    /* BACK TO TOP */
-    .back-to-top {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 50px;
-      height: 50px;
-      background: var(--primary);
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      z-index: 999;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
-
-    .back-to-top.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .back-to-top:hover {
-      background: var(--primary-light);
-      transform: translateY(-3px);
-    }
-
-    /* LOADING OVERLAY */
-    .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--secondary);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease;
-    }
-
-    .loading-spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid var(--accent);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* RESPONSIVE ADJUSTMENTS */
-    @media (max-width: 768px) {
-      .hero-overlay {
-        padding: 2rem 1rem;
-      }
-      
-      .hero-slide h2 {
-        font-size: 1.8rem;
-      }
-    }
+   
   </style>
 </head>
 
 <body class="text-gray-800">
   
 <!-- NAVBAR -->
-  <header class="bg-white shadow sticky top-0 z-50">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-[#8b4513]">GALERI BU NUNUK SAHID</h1>
-      <nav class="space-x-4">
-        <a href="#" class="text-[#8b4513] hover:text-[#a0522d] font-medium">Beranda</a>
-        <a href="#galeri" class="text-[#8b4513] hover:text-[#a0522d] font-medium">Koleksi baju</a>
-        <a href="#testimonial" class="text-[#8b4513] hover:text-[#a0522d] font-medium">Testimoni</a>
-        <a href="#faq" class="text-[#8b4513] hover:text-[#a0522d] font-medium">Pertanyaan</a>
-        <a href="admin_list.php" class="text-gray-600 hover:text-[#a0522d]">Admin</a>
-      </nav>
+<header class="bg-white shadow sticky top-0 z-50">
+  <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-[#8b4513]">GALERI BU NUNUK SAHID</h1>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden md:flex items-center space-x-4">
+      <a href="#" class="text-[#8b4513] hover:text-[#a0522d] font-medium">Beranda</a>
+      <a href="#galeri" class="text-[#8b4513] hover:text-[#a0522d] font-medium">Koleksi Baju</a>
+      <a href="#testimonial" class="text-[#8b4513] hover:text-[#a0522d] font-medium">Testimoni</a>
+      <a href="#faq" class="text-[#8b4513] hover:text-[#a0522d] font-medium">Pertanyaan</a>
+      <a href="admin_list.php" class="text-gray-600 hover:text-[#a0522d]">Admin</a>
+    </nav>
+
+    <!-- Mobile Menu Button -->
+    <div class="md:hidden">
+      <button id="menu-btn" class="text-gray-800 focus:outline-none">
+        <i class="fas fa-bars text-2xl"></i>
+      </button>
     </div>
-  </header>
+  </div>
+
+  <!-- Mobile Dropdown Menu -->
+  <div id="mobile-menu" class="hidden md:hidden">
+  <a href="#" class="flex items-center gap-3 py-3 px-4 text-[#8b4513] hover:bg-gray-100/70">
+    <i class="fas fa-home"></i> Beranda
+  </a>
+  <a href="#galeri" class="flex items-center gap-3 py-3 px-4 text-[#8b4513] hover:bg-gray-100/70">
+    <i class="fas fa-tshirt"></i> Koleksi Baju
+  </a>
+  <a href="#testimonial" class="flex items-center gap-3 py-3 px-4 text-[#8b4513] hover:bg-gray-100/70">
+    <i class="fas fa-comment"></i> Testimoni
+  </a>
+  <a href="#faq" class="flex items-center gap-3 py-3 px-4 text-[#8b4513] hover:bg-gray-100/70">
+    <i class="fas fa-question-circle"></i> Pertanyaan
+  </a>
+  <a href="admin_list.php" class="flex items-center gap-3 py-3 px-4 text-gray-600 hover:bg-gray-100/70">
+    <i class="fas fa-user-cog"></i> Admin
+  </a>
+</div>
+
+
+</header>
+
 
 <!-- HERO SLIDER -->
 <section class="relative bg-tribal text-center text-[#5c2c06] py-8 md:py-16 overflow-hidden">
@@ -356,7 +318,7 @@ $baju = $koneksi->query($query);
   </section>
 
   <!-- TESTIMONIAL SECTION -->
-  <section id="testimonial" class="py-8 bg-white">
+  <section id="testimonial" class="py-8 bg-white scroll-mt-16">
     <div class="container mx-auto px-4">
       <div class="text-center mb-12">
         <h2 class="text-2xl md:text-3xl font-bold mb-3">Apa Kata Pelanggan Kami</h2>
@@ -451,7 +413,7 @@ $baju = $koneksi->query($query);
   </section>
 
   <!-- FAQ SECTION -->
-  <section id="faq" class="py-8 bg-secondary">
+  <section id="faq" class="py-8 bg-secondary scroll-mt-16">
     <div class="container mx-auto px-2">
       <div class="max-w-4xl mx-auto">
         <div class="text-center mb-12">
@@ -684,48 +646,24 @@ $baju = $koneksi->query($query);
         });
       });
 
-      // (opsional) back-to-top atau fitur lain
     });
 </script>
-<script>// Back to top button
-    const backToTopButton = document.querySelector('.back-to-top');
-    window.addEventListener('scroll', () => {
-      if (window.pageYOffset > 300) {
-        backToTopButton.classList.add('active');
-      } else {
-        backToTopButton.classList.remove('active');
-      }
-    });
 
-    backToTopButton.addEventListener('click', () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    });
+<script>
+  const menuBtn = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
 
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          window.scrollTo({
-            top: targetElement.offsetTop - 80,
-            behavior: 'smooth'
-          });
-          
-          // Close mobile menu if open
-          if (!mobileMenu.classList.contains('hidden')) {
-            mobileMenu.classList.add('hidden');
-          }
-        }
-      });
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+
+  // Tutup dropdown saat menu di klik
+  const menuLinks = mobileMenu.querySelectorAll('a');
+  menuLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
     });
+  });
 </script>
 
 </body>
