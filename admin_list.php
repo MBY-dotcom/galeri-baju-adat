@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION['admin_login'])) {
+  header("Location: login.php");
+  exit;
+}
 $koneksi = new mysqli("localhost", "root", "", "db_bajuadat");
 $baju = $koneksi->query("SELECT * FROM koleksi_baju ORDER BY created_at DESC");
 ?>
@@ -14,6 +19,7 @@ $baju = $koneksi->query("SELECT * FROM koleksi_baju ORDER BY created_at DESC");
 
   <div class="max-w-6xl mx-auto px-4 py-10">
     <h1 class="text-3xl font-bold mb-6 text-indigo-700">📦 Data Koleksi Baju</h1>
+    <a href="index.php" class="inline-block bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">🏠 Kembali ke Home</a>
     <a href="admin.php" class="inline-block mb-4 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">+ Tambah Baju Baru</a>
 
     <div class="overflow-x-auto bg-white shadow-md rounded-lg">
@@ -23,7 +29,7 @@ $baju = $koneksi->query("SELECT * FROM koleksi_baju ORDER BY created_at DESC");
             <th class="px-4 py-2 text-left">#</th>
             <th class="px-4 py-2 text-left">Gambar</th>
             <th class="px-4 py-2 text-left">Nama</th>
-            <th class="px-4 py-2 text-left">Deskripsi</th>
+            <th class="px-4 py-2 text-left">Harga</th>
             <th class="px-4 py-2 text-left">Kategori</th>
             <th class="px-4 py-2 text-left">Ukuran</th>
             <th class="px-4 py-2 text-left">Deskripsi</th>
@@ -49,6 +55,7 @@ $baju = $koneksi->query("SELECT * FROM koleksi_baju ORDER BY created_at DESC");
         </tbody>
       </table>
     </div>
+
   </div>
 
 </body>
