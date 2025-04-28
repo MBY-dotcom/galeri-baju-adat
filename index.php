@@ -264,64 +264,67 @@ $baju = $koneksi->query($query);
     </div>
   </section>
 
-  <!-- KOLEKSI + FILTER -->
-  <section class="container mx-auto px-4 py-8 scroll-mt-16" id="galeri">
-    <h3 class="text-2xl font-semibold mb-2 text-center text-[#5c2c06]">Koleksi Baju Adat</h3>
-    <!-- FILTER KATEGORI -->
-    <div class="text-center mb-12">
-      <p class="text-gray-600 text-sm md:text-base mx-auto mb-8">
-        Temukan berbagai pilihan baju adat dari seluruh Indonesia untuk berbagai acara dan kebutuhan
-      </p>
+ <!-- KOLEKSI + FILTER -->
+<section class="container mx-auto px-4 py-8 scroll-mt-12" id="galeri">
+  <h3 class="text-2xl md:text-3xl font-bold mb-3 text-center text-[#5c2c06]">Koleksi Baju Adat</h3>
+  
+  <!-- FILTER KATEGORI -->
+  <div class="text-center mb-8">
+    <p class="text-gray-600 text-sm md:text-base mx-auto mb-4">
+      Temukan berbagai pilihan baju adat dari seluruh Indonesia untuk berbagai acara dan kebutuhan
+    </p>
 
-      <div class="flex flex-wrap justify-center gap-8">
-        <?php
-        $kategori_list = [
-          "Semua" => "fa-table-cells",
-          "Pernikahan" => "fa-heart",
-          "Wisuda" => "fa-graduation-cap",
-          "Baju Adat Carnaval" => "fa-mask"
-        ];
-        foreach ($kategori_list as $kategori => $ikon) :
-          $is_active = ($kategori_aktif == $kategori);
-        ?>
-          <a href="index.php?kategori=<?= urlencode($kategori); ?>#galeri" class="relative group filter-link flex items-center gap-2 <?= $is_active ? 'text-[#a0522d]' : '' ?>">
-            <i class="fa-solid <?= $ikon ?>"></i>
-            <?= str_replace('Baju Adat ', '', $kategori); ?>
-            <span class="underline-hover absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-[3px] rounded-full transition-all duration-300 <?= $is_active ? 'opacity-100 scale-100' : 'opacity-0 scale-0 group-hover:opacity-50 group-hover:scale-100' ?>"></span>
-          </a>
-        <?php endforeach; ?>
-      </div>
-    </div>
-
-    <!-- GALERI BAJU -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      <?php while ($row = $baju->fetch_assoc()) :
-        $wa_link = "https://wa.me/6282142544486?text=" . urlencode("Halo, saya ingin menanyakan ketersediaan baju *{$row['nama']}*. Apakah masih tersedia?");
+    <div class="flex flex-wrap justify-center gap-2 md:gap-8 md:text-base">
+      <?php
+      $kategori_list = [
+        "Semua" => "fa-table-cells",
+        "Pernikahan" => "fa-heart",
+        "Wisuda" => "fa-graduation-cap",
+        "Baju Adat Carnaval" => "fa-mask"
+      ];
+      foreach ($kategori_list as $kategori => $ikon) :
+        $is_active = ($kategori_aktif == $kategori);
       ?>
-        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition border">
-          <a href="detail.php?id=<?= $row['id']; ?>">
-            <img src="gambar/<?= $row['gambar']; ?>" alt="<?= $row['nama']; ?>" class="w-full h-48 object-cover">
-          </a>
-          <div class="p-4 flex flex-col h-full koleksi-card">
-            <h4><?= $row['nama']; ?></h4>
-            <p><?= $row['kategori']; ?> - <?= $row['ukuran']; ?></p>
-            <p class="mt-2"><?= substr($row['deskripsi'], 0, 80); ?>...</p>
-            <p class="mt-2 harga">Rp <?= number_format($row['harga'], 0, ',', '.'); ?></p>
-            <a href="<?= $wa_link; ?>" target="_blank"
-              class="mt-4 inline-block text-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition text-sm">
-              <i class="fa-brands fa-whatsapp mr-2"></i> Sewa via WhatsApp
-            </a>
-          </div>
-        </div>
-      <?php endwhile; ?>
+        <a href="index.php?kategori=<?= urlencode($kategori); ?>#galeri" 
+          class="relative group filter-link flex items-center gap-2 <?= $is_active ? 'text-[#a0522d]' : '' ?>">
+          <i class="fa-solid <?= $ikon ?>"></i>
+          <?= str_replace('Baju Adat ', '', $kategori); ?>
+          <span class="underline-hover absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-[3px] rounded-full transition-all duration-300 <?= $is_active ? 'opacity-100 scale-100' : 'opacity-0 scale-0 group-hover:opacity-50 group-hover:scale-100' ?>"></span>
+        </a>
+      <?php endforeach; ?>
     </div>
-  </section>
+  </div>
+
+  <!-- GALERI BAJU -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 transition-all duration-500 ease-in-out">
+    <?php while ($row = $baju->fetch_assoc()) :
+      $wa_link = "https://wa.me/6282142544486?text=" . urlencode("Halo, saya ingin menanyakan ketersediaan baju *{$row['nama']}*. Apakah masih tersedia?");
+    ?>
+      <div class="bg-white rounded-xl shadow-md overflow-hidden transform transition-all duration-500 hover:scale-105 hover:shadow-lg border">
+        <a href="detail.php?id=<?= $row['id']; ?>">
+          <img src="gambar/<?= $row['gambar']; ?>" alt="<?= $row['nama']; ?>" class="w-full h-48 object-cover">
+        </a>
+        <div class="p-4 flex flex-col h-full koleksi-card">
+          <h4><?= $row['nama']; ?></h4>
+          <p><?= $row['kategori']; ?> - <?= $row['ukuran']; ?></p>
+          <p class="mt-2"><?= substr($row['deskripsi'], 0, 80); ?>...</p>
+          <p class="mt-2 harga">Rp <?= number_format($row['harga'], 0, ',', '.'); ?></p>
+          <a href="<?= $wa_link; ?>" target="_blank"
+            class="mt-4 inline-block text-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition text-sm">
+            <i class="fa-brands fa-whatsapp mr-2"></i> Sewa via WhatsApp
+          </a>
+        </div>
+      </div>
+    <?php endwhile; ?>
+  </div>
+</section>
+
 
   <!-- TESTIMONIAL SECTION -->
-  <section id="testimonial" class="py-8 bg-white scroll-mt-16">
+  <section id="testimonial" class="py-8 bg-white scroll-mt-12">
     <div class="container mx-auto px-4">
       <div class="text-center mb-12">
-        <h2 class="text-2xl md:text-3xl font-bold mb-3">Apa Kata Pelanggan Kami</h2>
+        <h2 class="text-2xl md:text-3xl font-bold mb-3 text-center text-[#5c2c06]">Apa Kata Pelanggan Kami</h2>
         <p class="text-gray-600 max-w-2xl mx-auto">
           Testimoni jujur dari pelanggan yang telah menggunakan jasa kami
         </p>
@@ -413,11 +416,11 @@ $baju = $koneksi->query($query);
   </section>
 
   <!-- FAQ SECTION -->
-  <section id="faq" class="py-8 bg-secondary scroll-mt-16">
+  <section id="faq" class="py-8 bg-secondary scroll-mt-12">
     <div class="container mx-auto px-2">
       <div class="max-w-4xl mx-auto">
         <div class="text-center mb-12">
-          <h2 class="text-2xl md:text-3xl font-bold mb-3">Pertanyaan yang Sering Diajukan</h2>
+          <h2 class="text-2xl md:text-3xl font-bold mb-3 text-center text-[#5c2c06]">Pertanyaan yang Sering Diajukan</h2>
           <p class="text-gray-600">
             Temukan jawaban atas pertanyaan umum seputar penyewaan baju adat
           </p>
@@ -649,7 +652,8 @@ $baju = $koneksi->query($query);
     });
 </script>
 
-<script>
+
+<script> // Dropdown Menu
   const menuBtn = document.getElementById('menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
 
