@@ -168,7 +168,7 @@ $baju = $koneksi->query($query);
       <a href="#galeri" class="text-[#8b4513] hover:text-[#a0522d] font-medium">Koleksi Baju</a>
       <a href="#testimonial" class="text-[#8b4513] hover:text-[#a0522d] font-medium">Testimoni</a>
       <a href="#faq" class="text-[#8b4513] hover:text-[#a0522d] font-medium">Pertanyaan</a>
-      <a href="admin_list.php" class="text-gray-600 hover:text-[#a0522d]">Admin</a>
+      <a href="admin_list.php" id="admin-link" class="text-gray-600 hover:text-[#a0522d]" style="display:none;">Admin</a>
     </nav>
 
     <!-- Mobile Menu Button -->
@@ -181,24 +181,22 @@ $baju = $koneksi->query($query);
 
   <!-- Mobile Dropdown Menu -->
   <div id="mobile-menu" class="hidden md:hidden">
-  <a href="#" class="flex items-center gap-3 py-3 px-4 text-[#8b4513] hover:bg-gray-100/70">
-    <i class="fas fa-home"></i> Beranda
-  </a>
-  <a href="#galeri" class="flex items-center gap-3 py-3 px-4 text-[#8b4513] hover:bg-gray-100/70">
-    <i class="fas fa-tshirt"></i> Koleksi Baju
-  </a>
-  <a href="#testimonial" class="flex items-center gap-3 py-3 px-4 text-[#8b4513] hover:bg-gray-100/70">
-    <i class="fas fa-comment"></i> Testimoni
-  </a>
-  <a href="#faq" class="flex items-center gap-3 py-3 px-4 text-[#8b4513] hover:bg-gray-100/70">
-    <i class="fas fa-question-circle"></i> Pertanyaan
-  </a>
-  <a href="admin_list.php" class="flex items-center gap-3 py-3 px-4 text-gray-600 hover:bg-gray-100/70">
-    <i class="fas fa-user-cog"></i> Admin
-  </a>
-</div>
-
-
+    <a href="#" class="flex items-center gap-3 py-3 px-4 text-[#8b4513] hover:bg-gray-100/70">
+      <i class="fas fa-home"></i> Beranda
+    </a>
+    <a href="#galeri" class="flex items-center gap-3 py-3 px-4 text-[#8b4513] hover:bg-gray-100/70">
+      <i class="fas fa-tshirt"></i> Koleksi Baju
+    </a>
+    <a href="#testimonial" class="flex items-center gap-3 py-3 px-4 text-[#8b4513] hover:bg-gray-100/70">
+      <i class="fas fa-comment"></i> Testimoni
+    </a>
+    <a href="#faq" class="flex items-center gap-3 py-3 px-4 text-[#8b4513] hover:bg-gray-100/70">
+      <i class="fas fa-question-circle"></i> Pertanyaan
+    </a>
+    <a href="admin_list.php" id="mobile-admin-link" class="flex items-center gap-3 py-3 px-4 text-gray-600 hover:bg-gray-100/70" style="display:none;">
+      <i class="fas fa-user-cog"></i> Admin
+    </a>
+  </div>
 </header>
 
 
@@ -559,7 +557,6 @@ $baju = $koneksi->query($query);
         </ul>
       </div>
         
-      
     <div class="border-t border-amber-800 pt-6 text-center">
       <p class="text-amber-100 text-sm">
         &copy; Galeri Baju Adat. Dibuat dengan ❤️ oleh Brian.
@@ -670,5 +667,19 @@ $baju = $koneksi->query($query);
   });
 </script>
 
+<script>
+  document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey && event.key === 'l') {
+      const adminLink = document.getElementById('admin-link');
+      const mobileAdminLink = document.getElementById('mobile-admin-link');
+      if (adminLink) {
+        adminLink.style.display = adminLink.style.display === 'none' ? 'block' : 'none';
+      }
+      if (mobileAdminLink) {
+        mobileAdminLink.style.display = mobileAdminLink.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+  });
+</script>
 </body>
 </html>
