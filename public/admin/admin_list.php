@@ -4,7 +4,8 @@ if (!isset($_SESSION['admin_login'])) {
   header("Location: login.php");
   exit;
 }
-$koneksi = new mysqli("localhost", "root", "", "db_bajuadat");
+require_once __DIR__ . '/../../app/config/koneksi.php';
+
 $baju = $koneksi->query("SELECT * FROM koleksi_baju ORDER BY created_at DESC");
 ?>
 
@@ -13,13 +14,13 @@ $baju = $koneksi->query("SELECT * FROM koleksi_baju ORDER BY created_at DESC");
 <head>
   <meta charset="UTF-8">
   <title>Admin - Data Koleksi Baju</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body class="bg-gray-100 text-gray-800">
 
   <div class="max-w-6xl mx-auto px-4 py-10">
     <h1 class="text-3xl font-bold mb-6 text-indigo-700">📦 Data Koleksi Baju</h1>
-    <a href="index.php" class="inline-block bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">🏠 Kembali ke Home</a>
+    <a href="../index.php" class="inline-block bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">🏠 Kembali ke Home</a>
     <a href="admin.php" class="inline-block mb-4 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">+ Tambah Baju Baru</a>
 
     <div class="overflow-x-auto bg-white shadow-md rounded-lg">
@@ -40,7 +41,7 @@ $baju = $koneksi->query("SELECT * FROM koleksi_baju ORDER BY created_at DESC");
           <?php $no = 1; while($row = $baju->fetch_assoc()): ?>
             <tr class="border-b">
               <td class="px-4 py-2"><?php echo $no++; ?></td>
-              <td class="px-4 py-2"><img src="gambar/<?php echo $row['gambar']; ?>" alt="" class="w-16 h-16 object-cover rounded"></td>
+              <td class="px-4 py-2"><img src="../gambar/<?php echo $row['gambar']; ?>" alt="" class="w-16 h-16 object-cover rounded"></td>
               <td class="px-4 py-2"><?php echo $row['nama']; ?></td>
               <td class="px-4 py-2"><?php echo $row['harga']; ?></td>
               <td class="px-4 py-2"><?php echo $row['kategori']; ?></td>

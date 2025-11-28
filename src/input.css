@@ -1,0 +1,185 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* === Custom Styles === */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Roboto&display=swap');
+
+/* Base */
+@layer base {
+  body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #ffffff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+/* Components */
+@layer components {
+  .bg-tribal {
+     background-image: url('../../gambar/11781 - Copy.jpg');
+    @apply bg-cover bg-center bg-no-repeat;
+  }
+
+  .hero-overlay {
+    background: #dce0e7;
+    @apply p-12 rounded-md;
+  }
+
+  .btn-tribal {
+    background-color: #a6b0c1;
+  }
+  .btn-tribal:hover {
+    background-color: rgb(134, 156, 194);
+  }
+
+
+  .stat-box {
+    background-color: #d0d5de;
+  }
+
+  /* FILTER */
+  .filter-link {
+    @apply transition-all duration-300 font-semibold;
+    color: #001247;
+  }
+  .filter-link:hover {
+    color: #001247;
+  }
+  .filter-link .underline-hover {
+    background-color: #001247;
+  }
+
+  /* KOLEKSI CARD */
+  .koleksi-card h4 {
+    font-family: 'Playfair Display', serif;
+    color: #0f2858;
+    font-size: 1.1rem;
+  }
+  .koleksi-card p {
+    font-size: 0.9rem;
+    color: #5f5f5f;
+  }
+  .koleksi-card .harga {
+    color: #0f2858;
+    font-weight: 600;
+  }
+
+  /* TESTIMONIAL */
+  .testimonial-card {
+    background: rgb(243 244 246 / var(--tw-bg-opacity));
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+  }
+  .testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+  .testimonial-card .quote-icon {
+    color: var(--accent);
+    font-size: 2rem;
+    opacity: 0.5;
+  }
+
+  bg-amber-900 {
+    --tw-bg-opacity: 1;
+    background-color: #a8b1c3;
+  }
+}
+
+/* Utilities */
+@layer utilities {
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+
+  .delay-100 { animation-delay: 0.1s; }
+  .delay-200 { animation-delay: 0.2s; }
+  .delay-300 { animation-delay: 0.3s; }
+}
+
+/* === DARK MODE === */
+body.dark {
+  background-color: #2f2a21 !important;
+  color: #fbe9d0 !important;
+}
+
+.dark .bg-white,
+.dark .navbar-header,
+.dark .bg-gray-100,
+.dark .hero-overlay,
+.dark .bg-slate-100 {
+  background-color: #231f18 !important;
+  color: #fbe9d0 !important;
+}
+
+.dark .bg-tribal {
+  background-image: url('../../gambar/11781.jpg');
+}
+
+.dark .text-black,
+.dark .text-gray-900,
+.dark .text-gray-800,
+.dark .text-gray-700,
+.dark .text-gray-600 {
+  color: #fbe9d0 !important;
+}
+
+.dark .stats-section {
+  background-color: #fff8f0;
+}
+
+.dark .stat-box {
+  background-color: #2f2a21;
+}
+
+.dark .gradient-bar {
+  background: linear-gradient(to bottom, #fff8f0, #231f18);
+}
+
+.dark .koleksi-card {
+  background-color: #231f18 !important;
+  color: #fbe9d0 !important;
+}
+.dark .koleksi-card h4,
+.dark .koleksi-card p {
+  color: #fbe9d0 !important;
+}
+.dark .koleksi-card .harga {
+  color: #ffd58a !important;
+}
+
+.dark .btn,
+.dark button {
+  background-color: #2f2a21 !important;
+  color: #fbe9d0 !important;
+  border: none !important;
+}
+.dark .btn-tribal {
+  background-color: #594f3e !important;
+}
+.dark .btn-tribal:hover {
+  background-color: #7a6a54 !important;
+}
+
+.dark .filter-link { color: #fbe9d0 !important; }
+.dark .filter-link:hover { color: #ffd58a !important; }
+.dark .filter-link .underline-hover { background-color: #ffd58a !important; }
+
+.dark .testimonial-card { background: #2f2a21 !important; }
+.dark .testimonial-card .quote-icon { color: #ffd58a !important; }
+
+.dark footer, .dark .footer {
+  background-color: #484032 !important;
+  color: #fbe9d0 !important;
+}

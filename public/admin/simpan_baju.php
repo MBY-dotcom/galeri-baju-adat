@@ -1,5 +1,6 @@
 <?php
-$koneksi = new mysqli("localhost", "root", "", "db_bajuadat");
+require_once __DIR__ . '/../../app/config/koneksi.php';
+
 
 $nama = $_POST['nama'];
 $kategori = $_POST['kategori'];
@@ -11,7 +12,7 @@ $harga = $_POST['harga'];
 // Upload gambar
 $nama_file = $_FILES['gambar']['name'];
 $lokasi_tmp = $_FILES['gambar']['tmp_name'];
-$folder_upload = "gambar/";
+$folder_upload = "../gambar/";
 
 // Pindahkan file ke folder gambar/
 move_uploaded_file($lokasi_tmp, $folder_upload . $nama_file);

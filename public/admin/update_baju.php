@@ -1,5 +1,7 @@
 <?php
-$koneksi = new mysqli("localhost", "root", "", "db_bajuadat");
+require_once __DIR__ . '/../../app/config/koneksi.php';
+
+
 
 $id = $_POST['id'];
 $nama = $_POST['nama'];
@@ -15,13 +17,13 @@ if ($_FILES['gambar']['name'] != "") {
     // Jika user upload gambar baru
     $nama_file = $_FILES['gambar']['name'];
     $lokasi_tmp = $_FILES['gambar']['tmp_name'];
-    $folder_upload = "gambar/";
+    $folder_upload = "../gambar/";
 
     move_uploaded_file($lokasi_tmp, $folder_upload . $nama_file);
 
     // Hapus gambar lama jika file baru diupload
-    if (file_exists("gambar/" . $gambar_lama)) {
-        unlink("gambar/" . $gambar_lama);
+    if (file_exists("../gambar/" . $gambar_lama)) {
+        unlink("../gambar/" . $gambar_lama);
     }
 
     // Update data dengan gambar baru

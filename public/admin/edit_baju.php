@@ -1,5 +1,6 @@
 <?php
-$koneksi = new mysqli("localhost", "root", "", "db_bajuadat");
+require_once __DIR__ . '/../../app/config/koneksi.php';
+
 
 // Ambil data baju berdasarkan ID
 $id = $_GET['id'];
@@ -11,7 +12,7 @@ $data = $koneksi->query("SELECT * FROM koleksi_baju WHERE id = $id")->fetch_asso
 <head>
   <meta charset="UTF-8">
   <title>Edit Baju</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body class="bg-gray-100 text-gray-800">
 
@@ -43,7 +44,7 @@ $data = $koneksi->query("SELECT * FROM koleksi_baju WHERE id = $id")->fetch_asso
 
       <div>
         <label class="block mb-1 font-medium">Gambar Sekarang</label>
-        <img src="gambar/<?= $data['gambar']; ?>" alt="" class="w-32 h-32 object-cover rounded mb-2">
+        <img src="../gambar/<?= $data['gambar']; ?>" alt="" class="w-32 h-32 object-cover rounded mb-2">
         <input type="file" name="gambar" class="block">
         <small class="text-gray-500 text-sm">Kosongkan jika tidak ingin mengganti gambar.</small>
       </div>

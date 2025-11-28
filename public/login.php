@@ -1,6 +1,7 @@
 <?php
 session_start();
-$koneksi = new mysqli("localhost", "root", "", "db_bajuadat");
+require_once __DIR__ . '/../app/config/koneksi.php';
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $username = $_POST['username'];
@@ -23,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
   <meta charset="UTF-8">
   <title>Login Admin</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="assets/css/style.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
 

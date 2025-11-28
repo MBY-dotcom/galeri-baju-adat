@@ -1,5 +1,5 @@
 <?php
-$koneksi = new mysqli("localhost", "root", "", "db_bajuadat");
+require_once __DIR__ . '/../app/config/koneksi.php';
 
 if (!isset($_GET['id'])) {
   echo "ID tidak ditemukan.";
@@ -23,7 +23,7 @@ $wa_link = "https://wa.me/6282142544486?text=" . urlencode("Halo, saya ingin men
 <head>
   <meta charset="UTF-8">
   <title><?= $data['nama']; ?> - Detail Baju</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="assets/css/style.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Roboto&display=swap');

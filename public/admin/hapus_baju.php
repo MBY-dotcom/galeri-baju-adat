@@ -1,5 +1,7 @@
 <?php
-$koneksi = new mysqli("localhost", "root", "", "db_bajuadat");
+require_once __DIR__ . '/../../app/config/koneksi.php';
+
+
 
 $id = $_GET['id'];
 
@@ -8,8 +10,8 @@ $data = $koneksi->query("SELECT gambar FROM koleksi_baju WHERE id = $id")->fetch
 $nama_gambar = $data['gambar'];
 
 // Hapus gambar dari folder jika ada
-if (file_exists("gambar/" . $nama_gambar)) {
-    unlink("gambar/" . $nama_gambar);
+if (file_exists("../gambar/" . $nama_gambar)) {
+    unlink("../gambar/" . $nama_gambar);
 }
 
 // Hapus data dari database
