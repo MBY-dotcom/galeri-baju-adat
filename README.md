@@ -1,26 +1,55 @@
-Website Galeri Bu Nunuk Sahid - merupakan sebuah website sederhana yang dirancang berbasis Native PHP dan Tailwind untuk membantu kegiatan persewaan baju adat UMKM Galeri Bu Nunuk Sahid yang berada di Kabupaten Tuban
+Galeri Bu Nunuk Sahid — Sistem Informasi Penyewaan Baju Adat
 
-Proyek ini recananya akan di upgrade dari waktu ke waktu dengan adaptasi menyesesuaikan pemilik dan pelanggan
+Website berbasis Native PHP dan Tailwind CSS, dibuat untuk membantu proses operasional dan digitalisasi UMKM Galeri Bu Nunuk Sahid yang berlokasi di Kabupaten Tuban.
 
-V1 (done)
-- Galeri tipe One Page semua info ada di Landing Page 
-- Pemesan langsung dialihkan ke WhatsApp sesuai baju yang dipilih
-- Ada halaman untuk admin manajemen koleksi baju
-- Tujuan Utama :
-  1. Sarana promosi awal dan memperluas jangkauan
-  2. Adaptasi awal utk pemilik usaha dan pelanggan lama teknologi mengingat UMKM ini ada di Pedesaan
+Proyek ini akan terus di-upgrade secara bertahap mengikuti kebutuhan pemilik dan kenyamanan pelanggan.
 
-V2 (in progess)
-- Upgrade cara pemesanan mulai dijalankan pakai sistem
-- Menggunakan Algoritma FCFS, Time-Based Allocation dan Capacity-Based
-- Pembayaran tetap pada cash saat ada serah terima baju 
-- Tujuan Utama :
-  1. Bagi Pemilik Galeri yaitu mengatasi masalah proses penyewaan untuk double booking, merapikan pencatatan, dan mentrack manajemenen baju
-  2. Bagi Pelanggan menjamin proses penyewaan agar transparan dan keadilan terkait ketersedian baju
+✨ Fitur & Perkembangan Versi
 
-V3 (in concept)
-- Penggunaan api dan peningkatan keamanan
-- Upgrade terutama pada pembayaran via online diutamakan DP agar pemilik tidak rugi terhadap user pembatalan mendekati hari H
+✔ V1 (Selesai)
 
-V4 (in concept)
-- Penambahan fitur memanjakan pelanggan seperti coba baju online melalui camera berfilter
+-Versi awal sebagai website landing page untuk promosi dan pengenalan sistem.
+
+-Fitur Utama:
+  1. Website one-page landing berisi seluruh informasi galeri.
+  2. Fitur pemesanan sederhana: langsung diarahkan ke WhatsApp sesuai baju yang dipilih.
+  3. Halaman CRUD Admin untuk manajemen koleksi baju.
+
+-Tujuan:
+  1. Media promosi awal & memperluas jangkauan UMKM.
+  2. Menjadi transisi awal pemilik & pelanggan yang belum terbiasa teknologi (UMKM pedesaan).
+
+🚧 V2 (Sedang Dikerjakan)
+
+-Versi ini mulai fokus pada otomatisasi proses penyewaan.
+
+-Fitur yang Diimplementasikan: Sistem penyewaan internal (tanpa WhatsApp lagi).
+
+-Penerapan algoritma:
+  1. FCFS (First Come First Serve)
+  2. Time-Based Allocation
+  3. Capacity-Based Allocation
+
+-Halaman Dashboard User untuk memilih baju & melakukan request penyewaan.
+
+-Halaman Dashboard Admin untuk lihat penjadwalan dan manajemen stok.
+
+-Kebijakan: Pembayaran masih cash saat serah terima (belum online).
+
+-Tujuan:
+  1. Untuk Pemilik Galeri: Mencegah double booking, memperbaiki pencatatan, dan melacak penggunaan baju.
+  2. Untuk Pelanggan: Proses penyewaan lebih transparan, adil, dan terjamin ketersediaannya.
+
+🧩 V3 (Konsep)
+
+-Fase peningkatan arsitektur & keamanan.
+
+-Rencana:
+  1. Integrasi API & peningkatan keamanan.
+  2. Penggunaan metode pembayaran online — terutama DP — untuk meminimalisir kerugian akibat pembatalan mendadak.
+
+🪄 V4 (Konsep Lanjutan)
+
+-Fitur inovatif untuk pengalaman pengguna.
+
+-Rencana: Fitur virtual try-on (mencoba baju online) menggunakan kamera + filter augmented.
