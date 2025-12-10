@@ -1,17 +1,40 @@
 <?php
+// Debug: aktifkan sementara untuk melihat error (matikan di production)
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// load koneksi — pastikan path benar
 require_once __DIR__ . '/../app/config/koneksi.php';
 
+// pastikan file koneksi membuat $koneksi (mysqli)
+if (!isset($koneksi) || !($koneksi instanceof mysqli)) {
+    die('Koneksi database tidak tersedia. Periksa file koneksi.php');
+}
+
+// ambil kategori aktif dari query string
 $kategori_aktif = isset($_GET['kategori']) ? $_GET['kategori'] : 'Semua';
 
 if ($kategori_aktif !== 'Semua') {
+    // gunakan prepared statement untuk mencegah SQL injection
     $stmt = $koneksi->prepare("SELECT * FROM koleksi_baju WHERE kategori = ? ORDER BY created_at DESC");
+    if (!$stmt) {
+        die("Prepare gagal: " . $koneksi->error);
+    }
     $stmt->bind_param("s", $kategori_aktif);
     $stmt->execute();
     $baju = $stmt->get_result();
 } else {
     $baju = $koneksi->query("SELECT * FROM koleksi_baju ORDER BY created_at DESC");
+    if (!$baju) {
+        die("Query gagal: " . $koneksi->error);
+    }
 }
+
+// di bagian bawah file, setelah loop, jangan lupa:
+// if (isset($stmt) && $stmt instanceof mysqli_stmt) $stmt->close();
+// $koneksi->close();
 ?>
+
 
 
 <!DOCTYPE html>
@@ -101,14 +124,14 @@ if ($kategori_aktif !== 'Semua') {
 </header>
 
 <!-- HERO SLIDER -->
-<section class="relative bg-tribal text-center text-[#5001247] py-8 md:py-14 overflow-hidden">
+<section class="relative bg-tribal text-center text-[#0f2858] py-8 md:py-14 overflow-hidden">
   <div class="container mx-auto px-4 relative min-h-[400px]">  
     <!-- Slides 1 -->
     <div class="hero-slide active hero-overlay max-w-4xl mx-auto">
       <p class="text-[17px] md:text-lg mb-2 font-medium">Selamat Datang di</p>
       <h1 class="text-[30px] md:text-4xl font-extrabold mb-3 tracking-wide leading-snug">GALERI BU NUNUK SAHID</h2>
       <p class="text-[16px] md:text-lg mb-6 text-gray-700 leading-relaxed">Temukan koleksi baju adat terlengkap dari seluruh Indonesia untuk berbagai acara dan kebutuhan Anda.</p>
-      <a href="#galeri" class="btn-tribal text-[#0f2858] dark:text-[#fbe9d0] px-6 py-3 rounded-full text-base inline-block min-w-[200px] text-center">Jelajahi Koleksi</a>
+      <a href="dashboard/index.php" class="btn-tribal text-[#0f2858] dark:text-[#fbe9d0] px-6 py-3 rounded-full text-base inline-block min-w-[200px] text-center">Jelajahi Koleksi</a>
     </div>
   </div>
 </section>
@@ -130,7 +153,7 @@ if ($kategori_aktif !== 'Semua') {
                 </div>
                 <div class="md:w-1/2" data-aos="fade-left">
                     <h2 class="text-3xl text-[#0f2858] dark:text-[#fbe9d0] font-serif font-bold text-primary mb-4">Tentang Galeri Bu Nunuk Sahid</h2>
-                    <p class="text-gray-600 leading-relaxed mb-6 ">
+                    <p class="text-gray-600 text-justify leading-relaxed mb-6 ">
                       Galeri Bu Nunuk Sahid adalah penyedia <strong>persewaan baju adat Tuban, Lamongan, dan Bojonegoro</strong> 
                       yang sudah dipercaya masyarakat selama lebih dari <span class="font-semibold">15 tahun</span>. 
                       Kami menghadirkan koleksi busana adat dari berbagai daerah di Indonesia dengan kualitas terbaik, 

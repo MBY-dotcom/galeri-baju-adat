@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../app/config/koneksi.php';
+require_once __DIR__ . '/../../app/config/koneksi.php';
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
   <meta charset="UTF-8">
   <title>Login Admin</title>
-  <link href="assets/css/style.css" rel="stylesheet">
+  <link href="../assets/css/style.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
 

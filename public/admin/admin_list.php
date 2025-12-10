@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['admin_login'])) {
-  header("Location: login.php");
+  header("Location: login_admin.php");
   exit;
 }
 require_once __DIR__ . '/../../app/config/koneksi.php';
