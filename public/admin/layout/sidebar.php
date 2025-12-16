@@ -2,36 +2,36 @@
 <div class="w-64 bg-white dark:bg-gray-800 shadow-xl hidden md:block">
 
     <div class="p-6 border-b dark:border-gray-700">
-        <h2 class="text-xl font-bold">User Panel</h2>
+        <h2 class="text-xl font-bold">Admin Panel</h2>
     </div>
 
     <nav class="flex-1 px-4 py-4 space-y-2">
 
-        <a href="index.php"
+        <a href="dashboard.php"
            class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
             Dashboard
         </a>
 
-        <a href="koleksi.php"
+        <a href="admin_list.php"
            class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
             Koleksi Baju
         </a>
 
-        <a href="pesanan_saya.php"
+        <a href="pesanan_list.php"
            class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-            Pesanan Saya
+            Daftar Pesanan
         </a>
 
-          <a href="profil.php"
+          <a href="user_list.php"
            class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-            Pengaturan Profil
+            Daftar User
         </a>
 
 
     </nav>
     
     <div class="p-4">
-        <a href="logout.php"
+        <a href="../index.php"
            class="block px-4 py-3 mt-6 rounded-lg bg-red-500 text-white text-center hover:bg-red-600">Logout
         </a>
     </div>
@@ -52,29 +52,30 @@
         <!-- Copy menu yang sama dengan desktop -->
         <nav class="space-y-1">
 
-            <a href="index.php"
-               class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-                Dashboard
-            </a>
+        <a href="dashboard.php"
+           class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
+            Dashboard
+         </a>
 
-            <a href="koleksi.php"
-               class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-                Koleksi Baju
-            </a>
+        <a href="adminlist.php"
+           class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
+            Koleksi Baju
+        </a>
 
-            <a href="pesanan_saya.php"
-               class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-                Pesanan Saya
-            </a>
-            <a href="profil.php"
-                class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-                 Pengaturan Profil
-            </a>
+        <a href="pesanan_list.php"
+           class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
+            Daftar Pesanan
+        </a>
 
-            <a href="logout.php"
+          <a href="user_list.php"
+           class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
+            Daftar User
+        </a>
+
+        <a href="../index.php"
                class="block px-4 py-3 mt-6 rounded-lg bg-red-500 text-white text-center hover:bg-red-600">
                 Logout
-            </a>
+        </a>
 
         </nav>
 

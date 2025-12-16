@@ -35,7 +35,7 @@ if(!$id_baju || !$tanggal || !$sesi || !$ukuran || $jumlah < 1){
 }
 
 // ====================================
-// Fungsi OVERLAP session (INI YANG PENTING)
+// Fungsi OVERLAP session 
 // ====================================
 function getOverlappingSessions($sesi){
     return match($sesi){

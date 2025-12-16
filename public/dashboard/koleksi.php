@@ -8,34 +8,56 @@ $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 $keyword = $_GET['cari'] ?? '';
 
-// ------------------
-// QUERY DATA
-// ------------------
 if ($keyword) {
+
     $stmt = $koneksi->prepare("
-        SELECT * FROM koleksi_baju 
-        WHERE nama LIKE ? OR kategori LIKE ?
-        ORDER BY created_at DESC
+        SELECT 
+          k.*,
+          GROUP_CONCAT(
+            CONCAT(s.ukuran)
+            ORDER BY s.ukuran
+            SEPARATOR ', '
+          ) AS ukuran_list
+        FROM koleksi_baju k
+        LEFT JOIN koleksi_stok s ON s.koleksi_id = k.id
+        WHERE k.nama LIKE ? OR k.kategori LIKE ?
+        GROUP BY k.id
+        ORDER BY k.created_at DESC
         LIMIT ? OFFSET ?
     ");
+
     $param = "%$keyword%";
     $stmt->bind_param("ssii", $param, $param, $limit, $offset);
     $stmt->execute();
     $baju = $stmt->get_result();
 
     $countStmt = $koneksi->prepare("
-        SELECT COUNT(*) AS total FROM koleksi_baju
-        WHERE nama LIKE ? OR kategori LIKE ?
+        SELECT COUNT(DISTINCT k.id) AS total
+        FROM koleksi_baju k
+        LEFT JOIN koleksi_stok s ON s.koleksi_id = k.id
+        WHERE k.nama LIKE ? OR k.kategori LIKE ?
     ");
     $countStmt->bind_param("ss", $param, $param);
     $countStmt->execute();
     $total_data = $countStmt->get_result()->fetch_assoc()['total'];
+
 } else {
+
     $baju = $koneksi->query("
-        SELECT * FROM koleksi_baju 
-        ORDER BY created_at DESC 
+        SELECT 
+          k.*,
+          GROUP_CONCAT(
+            CONCAT(s.ukuran)
+            ORDER BY s.ukuran
+            SEPARATOR ', '
+          ) AS ukuran_list
+        FROM koleksi_baju k
+        LEFT JOIN koleksi_stok s ON s.koleksi_id = k.id
+        GROUP BY k.id
+        ORDER BY k.created_at DESC
         LIMIT $limit OFFSET $offset
     ");
+
     $total_data = $koneksi
         ->query("SELECT COUNT(*) AS total FROM koleksi_baju")
         ->fetch_assoc()['total'];
@@ -82,7 +104,7 @@ $total_page = max(1, (int)ceil($total_data / $limit));
             $nama = htmlspecialchars($row['nama']);
             $gambar = htmlspecialchars($row['gambar']);
             $kategori = htmlspecialchars($row['kategori']);
-            $ukuran = htmlspecialchars($row['ukuran']);
+            $ukuran = htmlspecialchars($row['ukuran_list'] ?? '-');
             $harga = number_format($row['harga'], 0, ',', '.');
             $deskripsi_short = htmlspecialchars(substr($row['deskripsi'], 0, 80));
           ?>
@@ -100,7 +122,7 @@ $total_page = max(1, (int)ceil($total_data / $limit));
               <div class="p-4 flex flex-col justify-between h-full">
                 <div>
                   <h4 class="font-bold text-lg uppercase mb-1"><?php echo $nama; ?></h4>
-                  <p class="text-sm text-gray-600 dark:text-gray-300 mb-1"><?php echo $kategori; ?> - <?php echo $ukuran; ?></p>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 mb-1"><?php echo $kategori; ?> - Ukuran: <?php echo $ukuran; ?></p>
                   <p class="text-sm text-gray-700 dark:text-gray-400"><?php echo $deskripsi_short; ?>...</p>
                 </div>
 

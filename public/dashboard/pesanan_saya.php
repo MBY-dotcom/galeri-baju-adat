@@ -31,10 +31,10 @@ $pesanan = $stmt->get_result();
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
   <div class="min-h-screen flex flex-col md:flex-row">
     <?php include "_sidebar.php"; ?>
-    <main class="flex-1 p-6 md:p-8">
+    <main class="flex-1 pt-2 px-6 pb-6 md:pt-2 md:px-8 md:pb-8">
       <?php include "_topbar.php"; ?>
 
-      <div class="mt-2 space-y-2 text-center pb-2">
+      <div class="mt-2 space-y-2 text-center pb-2 ">
       <h1 class="text-3xl font-bold">Pesanan Saya</h1>
       <p class="text-gray-600 dark:text-gray-300">Lihat semua pesanan baju yang telah Anda lakukan.</p>
       </div>
@@ -42,9 +42,9 @@ $pesanan = $stmt->get_result();
       <?php if ($pesanan->num_rows === 0): ?>
         <p class="text-gray-600 dark:text-gray-300">Belum ada pesanan.</p>
       <?php else: ?>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto rounded-xl">
           <table class="w-full table-auto border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
-            <thead class="bg-gray-100 dark:bg-gray-700">
+            <thead class="bg-white dark:bg-gray-700">
               <tr>
                 <th class="px-4 py-2 text-left">Baju</th>
                 <th class="px-4 py-2 text-left">Kategori</th>

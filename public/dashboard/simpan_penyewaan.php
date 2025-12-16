@@ -22,18 +22,19 @@ if(!$user_id || !$id_baju || !$tanggal || !$sesi || !$ukuran || $jumlah < 1){
 }
 
 // =======================
-// Time buffer function (HARUS SAMA dengan cek file)
+// Time buffer function 
 // =======================
-function getBlockedSessions($sesi){
+function getOverlappingSessions($sesi){
     $sesi = strtolower(trim($sesi));
     return match($sesi){
-        'pagi'  => ['pagi','siang'],
-        'siang' => ['siang','malam'],
-        'malam' => ['malam'],
+        'pagi'  => ['pagi'],              // pagi hanya bentrok pagi
+        'siang' => ['pagi','siang'],       // siang bentrok pagi + siang
+        'malam' => ['siang','malam'],      // malam bentrok siang + malam
         default => [$sesi]
     };
 }
-$sessions = getBlockedSessions($sesi);
+// Panggil fungsi y
+$sessions = getOverlappingSessions($sesi); 
 
 // =======================
 // Mulai transaksi
@@ -68,6 +69,7 @@ try{
     $likeClauses = [];
     $likeParams  = [];
 
+    // Menggunakan variabel $sessions 
     foreach($sessions as $s){
         $likeClauses[] = "LOWER(sesi) LIKE ?";
         $likeParams[]  = "%".$s."%";

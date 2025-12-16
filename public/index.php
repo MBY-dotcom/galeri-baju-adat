@@ -87,7 +87,7 @@ if ($kategori_aktif !== 'Semua') {
       <a href="#galeri" class="text-[#0f2858] dark:text-[#fbe9d0] hover:text-[#0f2858] font-medium">Koleksi Baju</a>
       <a href="#testimonial" class="text-[#0f2858] dark:text-[#fbe9d0] hover:text-[#0f2858] font-medium">Testimoni</a>
       <a href="#faq" class="text-[#0f2858] dark:text-[#fbe9d0] hover:text-[#0f2858] font-medium">Pertanyaan</a>
-      <a href="admin/admin_list.php" id="admin-link" class="text-gray-600 hover:text-[#0f2858]" style="display:none;">Admin</a>
+      <a href="admin/dashboard.php" id="admin-link" class="text-gray-600 hover:text-[#0f2858]" style="display:none;">Admin</a>
     
     <button id="darkModeToggle" class="ml-4 px-3 py-1 border rounded text-sm">🌙</button>
     </nav>
@@ -149,7 +149,7 @@ if ($kategori_aktif !== 'Semua') {
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8 hidden md:block" data-aos="fade-right">
-                    <img src="http://static.photos/people/640x360/10" alt="Bu Nunuk Sahid" class="rounded-lg shadow-lg w-full">
+                    <img src="gambar/Cuplikan layar.png" alt="Bu Nunuk Sahid" class="rounded-lg shadow-lg w-full">
                 </div>
                 <div class="md:w-1/2" data-aos="fade-left">
                     <h2 class="text-3xl text-[#0f2858] dark:text-[#fbe9d0] font-serif font-bold text-primary mb-4">Tentang Galeri Bu Nunuk Sahid</h2>
@@ -185,63 +185,72 @@ if ($kategori_aktif !== 'Semua') {
         </div>
     </section>
 
- <!-- KOLEKSI + FILTER -->
+<!-- KOLEKSI BAJU -->
 <section class="mx-auto px-4 py-8 scroll-mt-12" id="galeri">
-  <h3 class="text-2xl md:text-3xl font-bold mb-3 text-center text-[#001247] dark:text-[#fbe9d0]">Koleksi Baju Adat</h3>
-  
-  <!-- FILTER KATEGORI -->
-  <div class="text-center mb-8">
-    <p class="text-[#001247]-600 text-sm md:text-base mx-auto mb-4">
-      Temukan berbagai pilihan baju adat dari seluruh Indonesia untuk berbagai acara dan kebutuhan
-    </p>
+  <h3 class="text-2xl md:text-3xl font-bold mb-3 text-center text-[#001247] dark:text-[#fbe9d0]">
+    Koleksi Pilihan
+  </h3>
 
-    <div class="flex flex-wrap justify-center gap-2 md:gap-8 md:text-base">
-      <?php
-      $kategori_list = [
-        "Semua" => "fa-table-cells",
-        "Pernikahan" => "fa-heart",
-        "Wisuda" => "fa-graduation-cap",
-        "Baju Adat Carnaval" => "fa-mask"
-      ];
-      foreach ($kategori_list as $kategori => $ikon) :
-        $is_active = ($kategori_aktif == $kategori);
-      ?>
-        <a href="index.php?kategori=<?php echo urlencode($kategori);; ?>#galeri" 
-          class="relative group filter-link flex items-center gap-2 <?php echo $is_active ? 'text-[#001247]' : ''; ?>">
-          <i class="fa-solid <?php echo $ikon; ?>"></i>
-          <?php echo str_replace('Baju Adat ', '', $kategori);; ?>
-          <span class="underline-hover absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-[3px] rounded-full transition-all duration-300 <?php echo $is_active ? 'opacity-100 scale-100' : 'opacity-0 scale-0 group-hover:opacity-50 group-hover:scale-100'; ?>"></span>
-        </a>
-      <?php endforeach; ?>
-    </div> 
-  </div>
+  <p class="text-center text-gray-600 dark:text-gray-300 mb-8">
+    Beberapa koleksi pilihan yang sering disewa dan terbaru
+  </p>
 
-  <!-- GALERI BAJU -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 transition-all duration-500 ease-in-out">
-    <?php while ($row = $baju->fetch_assoc()) :
-      $wa_link = "https://wa.me/6282142544486?text=" . urlencode("Halo, saya ingin menanyakan ketersediaan baju *{$row['nama']}*. Apakah masih tersedia?");
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+    <?php
+    $index = 0;
+    while ($row = $baju->fetch_assoc()):
+      $index++;
+
+      // fake ribbon logic
+      if ($index <= 2) {
+          $ribbon_text = "Best Seller";
+          $ribbon_class = "bg-red-600";
+      } else {
+          $ribbon_text = "New Arrival";
+          $ribbon_class = "bg-indigo-600";
+      }
     ?>
-      <div class="bg-white rounded-xl shadow-md overflow-hidden transform transition-all duration-500 hover:scale-105 hover:shadow-lg border">
-        <a href="detail.php?id=<?php echo $row['id'];; ?>">
-         <img src="gambar/<?php echo $row['gambar']; ?>" 
-              alt="<?php echo htmlspecialchars($row['nama']); ?>" 
-              class="w-full h-48 object-cover"
-              loading="lazy">
+      <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border hover:shadow-lg transition">
+
+        <!-- RIBBON -->
+        <span class="absolute top-3 left-3 text-xs text-white px-3 py-1 rounded-full <?= $ribbon_class ?>">
+          <?= $ribbon_text ?>
+        </span>
+
+        <a href="detail.php?id=<?= $row['id'] ?>">
+          <img src="gambar/<?= htmlspecialchars($row['gambar']) ?>"
+               alt="<?= htmlspecialchars($row['nama']) ?>"
+               class="w-full h-48 object-cover"
+               loading="lazy">
         </a>
-        <div class="p-4 flex flex-col h-full koleksi-card">
-          <h4><?php echo $row['nama'];; ?></h4>
-          <p><?php echo $row['kategori'];; ?> - <?php echo $row['ukuran'];; ?></p>
-          <p class="mt-2"><?php echo substr($row['deskripsi'], 0, 80);; ?>...</p>
-          <p class="mt-2 harga">Rp <?php echo number_format($row['harga'], 0, ',', '.');; ?></p>
-          <a href="<?php echo $wa_link;; ?>" target="_blank"
-            class="mt-4 inline-block text-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition text-sm">
-            <i class="fa-brands fa-whatsapp mr-2"></i> Sewa via WhatsApp
+
+        <div class="p-4">
+          <h4 class="font-semibold text-lg mb-1">
+            <?= htmlspecialchars($row['nama']) ?>
+          </h4>
+
+          <p class="text-sm text-gray-500 mb-2">
+            <?= htmlspecialchars($row['kategori']) ?>
+          </p>
+
+          <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
+            <?= htmlspecialchars(substr($row['deskripsi'], 0, 80)) ?>...
+          </p>
+
+          <p class="font-bold text-indigo-600 mb-3">
+            Rp <?= number_format($row['harga'], 0, ',', '.') ?>
+          </p>
+
+          <a href="detail.php?id=<?= $row['id'] ?>"
+             class="block text-center bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md text-sm transition">
+            Lihat Detail
           </a>
         </div>
       </div>
     <?php endwhile; ?>
   </div>
 </section>
+
 
 <!-- How It Works -->
  <section class="py-16 bg-gray-100" id="cara-sewa">
