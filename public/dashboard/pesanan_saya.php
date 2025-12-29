@@ -8,11 +8,21 @@ if (!$user_id) {
     exit;
 }
 
-// ambil semua pesanan user
+/*
+|--------------------------------------------------------------------------
+| Ambil pesanan user + cek apakah sudah ada testimoni
+|--------------------------------------------------------------------------
+*/
 $stmt = $koneksi->prepare("
-    SELECT p.*, k.nama AS baju_nama, k.gambar AS baju_gambar, k.kategori AS baju_kategori
+    SELECT 
+        p.*,
+        k.nama AS baju_nama,
+        k.gambar AS baju_gambar,
+        k.kategori AS baju_kategori,
+        t.id AS testimoni_id
     FROM penyewaan p
     JOIN koleksi_baju k ON k.id = p.koleksi_id
+    LEFT JOIN testimoni t ON t.penyewaan_id = p.id
     WHERE p.user_id = ?
     ORDER BY p.tanggal DESC, p.created_at DESC
 ");
@@ -21,74 +31,153 @@ $stmt->execute();
 $pesanan = $stmt->get_result();
 ?>
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pesanan Saya</title>
   <link href="../assets/css/style.css" rel="stylesheet">
 </head>
+
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-  <div class="min-h-screen flex flex-col md:flex-row">
-    <?php include "_sidebar.php"; ?>
-    <main class="flex-1 pt-2 px-6 pb-6 md:pt-2 md:px-8 md:pb-8">
-      <?php include "_topbar.php"; ?>
 
-      <div class="mt-2 space-y-2 text-center pb-2 ">
-      <h1 class="text-3xl font-bold">Pesanan Saya</h1>
-      <p class="text-gray-600 dark:text-gray-300">Lihat semua pesanan baju yang telah Anda lakukan.</p>
+<div class="min-h-screen flex">
+  <?php include "_sidebar.php"; ?>
+
+  <main class="flex-1 px-6 py-4">
+    <?php include "_topbar.php"; ?>
+
+    <h1 class=" mt-2 space-y-2 text-center text-3xl font-bold">Pesanan Saya</h1>
+    <p class=" mt-2 space-y-2 text-center text-gray-600 dark:text-gray-300">
+      Daftar semua pesanan baju Anda
+    </p>
+
+    <?php if ($pesanan->num_rows === 0): ?>
+      <p class="text-gray-500">Belum ada pesanan.</p>
+    <?php else: ?>
+
+    <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-100 dark:bg-gray-700">
+          <tr>
+            <th class="px-4 py-3 text-left">Baju</th>
+            <th class="px-4 py-3">Tanggal</th>
+            <th class="px-4 py-3">Ukuran</th>
+            <th class="px-4 py-3">Jumlah</th>
+            <th class="px-4 py-3">Status</th>
+            <th class="px-4 py-3">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+
+        <?php while ($row = $pesanan->fetch_assoc()): ?>
+          <tr class="border-t dark:border-gray-700">
+            <td class="px-4 py-3 flex items-center gap-3">
+              <img src="../gambar/<?= htmlspecialchars($row['baju_gambar']) ?>"
+                   class="w-12 h-12 rounded object-cover">
+              <div>
+                <div class="font-medium"><?= htmlspecialchars($row['baju_nama']) ?></div>
+                <div class="text-xs text-gray-500"><?= htmlspecialchars($row['baju_kategori']) ?></div>
+              </div>
+            </td>
+
+            <td class="px-4 py-3"><?= htmlspecialchars($row['tanggal']) ?></td>
+            <td class="px-4 py-3"><?= htmlspecialchars($row['ukuran']) ?></td>
+            <td class="px-4 py-3"><?= (int)$row['jumlah'] ?></td>
+
+            <td class="px-4 py-3">
+              <?php
+                $badge = match ($row['status']) {
+                  'pending'   => 'bg-yellow-100 text-yellow-800',
+                  'disetujui' => 'bg-green-100 text-green-800',
+                  'ditolak'   => 'bg-red-100 text-red-800',
+                  default     => 'bg-gray-100 text-gray-800'
+                };
+              ?>
+              <span class="px-2 py-1 rounded text-xs <?= $badge ?>">
+                <?= ucfirst($row['status']) ?>
+              </span>
+            </td>
+
+            <td class="px-4 py-3">
+              <?php if (
+                in_array($row['status'], ['disetujui','selesai']) &&
+                !$row['testimoni_id']
+              ): ?>
+                <button
+                  onclick="openReviewModal(<?= $row['id'] ?>,'<?= addslashes($row['baju_nama']) ?>')"
+                  class="px-3 py-1 bg-indigo-600 text-white rounded text-xs hover:bg-indigo-700">
+                  Beri Testimoni
+                </button>
+              <?php elseif ($row['testimoni_id']): ?>
+                <span class="text-green-600 text-xs">Sudah direview</span>
+              <?php else: ?>
+                <span class="text-gray-400 text-xs">–</span>
+              <?php endif; ?>
+            </td>
+          </tr>
+        <?php endwhile; ?>
+
+        </tbody>
+      </table>
+    </div>
+
+    <?php endif; ?>
+  </main>
+</div>
+
+<!-- MODAL REVIEW -->
+<div id="reviewModal"
+     class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+
+  <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md">
+    <h3 class="text-lg font-bold mb-4">
+      Review: <span id="modalBajuNama"></span>
+    </h3>
+
+    <form method="POST" action="simpan_testimoni.php">
+      <input type="hidden" name="penyewaan_id" id="modalPenyewaanId">
+
+      <label class="block mb-1 font-medium">Rating</label>
+      <select name="rating" required class="w-full border px-3 py-2 rounded mb-3">
+        <option value="">Pilih</option>
+        <option value="5">★★★★★</option>
+        <option value="4">★★★★</option>
+        <option value="3">★★★</option>
+        <option value="2">★★</option>
+        <option value="1">★</option>
+      </select>
+
+      <label class="block mb-1 font-medium">Komentar</label>
+      <textarea name="komentar" required rows="4"
+        class="w-full border px-3 py-2 rounded mb-4"></textarea>
+
+      <div class="flex justify-end gap-2">
+        <button type="button" onclick="closeReviewModal()"
+          class="px-4 py-2 border rounded">
+          Batal
+        </button>
+        <button type="submit"
+          class="px-4 py-2 bg-indigo-600 text-white rounded">
+          Kirim
+        </button>
       </div>
-
-      <?php if ($pesanan->num_rows === 0): ?>
-        <p class="text-gray-600 dark:text-gray-300">Belum ada pesanan.</p>
-      <?php else: ?>
-        <div class="overflow-x-auto rounded-xl">
-          <table class="w-full table-auto border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
-            <thead class="bg-white dark:bg-gray-700">
-              <tr>
-                <th class="px-4 py-2 text-left">Baju</th>
-                <th class="px-4 py-2 text-left">Kategori</th>
-                <th class="px-4 py-2 text-left">Tanggal</th>
-                <th class="px-4 py-2 text-left">Sesi</th>
-                <th class="px-4 py-2 text-left">Ukuran</th>
-                <th class="px-4 py-2 text-left">Jumlah</th>
-                <th class="px-4 py-2 text-left">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php while ($row = $pesanan->fetch_assoc()): ?>
-                <tr class="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
-                  <td class="px-4 py-2 flex items-center gap-3">
-                    <img src="../gambar/<?php echo htmlspecialchars($row['baju_gambar']); ?>" alt="" class="w-12 h-12 object-cover rounded">
-                    <span><?php echo htmlspecialchars($row['baju_nama']); ?></span>
-                  </td>
-                  <td class="px-4 py-2"><?php echo htmlspecialchars($row['baju_kategori']); ?></td>
-                  <td class="px-4 py-2"><?php echo htmlspecialchars($row['tanggal']); ?></td>
-                  <td class="px-4 py-2"><?php echo htmlspecialchars($row['sesi']); ?></td>
-                  <td class="px-4 py-2"><?php echo htmlspecialchars($row['ukuran']); ?></td>
-                  <td class="px-4 py-2"><?php echo (int)$row['jumlah']; ?></td>
-                  <td class="px-4 py-2">
-                    <?php
-                      $status = $row['status'];
-                      $statusClass = match($status) {
-                        'pending' => 'bg-yellow-100 text-yellow-800',
-                        'disetujui' => 'bg-green-100 text-green-800',
-                        'ditolak' => 'bg-red-100 text-red-800',
-                        default => 'bg-gray-100 text-gray-800'
-                      };
-                    ?>
-                    <span class="px-2 py-1 rounded-full text-sm font-medium <?php echo $statusClass; ?>">
-                      <?php echo htmlspecialchars(ucfirst($status)); ?>
-                    </span>
-                  </td>
-                </tr>
-              <?php endwhile; ?>
-            </tbody>
-          </table>
-        </div>
-      <?php endif; ?>
-
-    </main>
+    </form>
   </div>
+</div>
+
+<script>
+function openReviewModal(id, nama) {
+  document.getElementById('modalPenyewaanId').value = id;
+  document.getElementById('modalBajuNama').innerText = nama;
+  document.getElementById('reviewModal').classList.remove('hidden');
+  document.getElementById('reviewModal').classList.add('flex');
+}
+
+function closeReviewModal() {
+  document.getElementById('reviewModal').classList.add('hidden');
+  document.getElementById('reviewModal').classList.remove('flex');
+}
+</script>
+
 </body>
 </html>

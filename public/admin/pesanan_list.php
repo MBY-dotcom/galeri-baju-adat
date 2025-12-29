@@ -8,7 +8,6 @@ if (!isset($_SESSION['admin_login'])) {
 require_once __DIR__ . '/../../app/config/koneksi.php';
 
 /*
-  CATATAN STRUKTUR (berdasarkan kode USER Anda):
   penyewaan:
   - id
   - user_id
@@ -17,16 +16,42 @@ require_once __DIR__ . '/../../app/config/koneksi.php';
   - sesi
   - ukuran
   - jumlah
-  - status
+  - status (pending | disetujui | dibatalkan)
   - created_at
 */
 
-// Ambil semua pesanan (ADMIN = TANPA filter user)
+/* ===============================
+   PROSES UPDATE STATUS (ADMIN)
+================================ */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
+
+    $pesanan_id = (int) $_POST['pesanan_id'];
+    $status     = $_POST['status'];
+
+    $allowed_status = ['pending', 'disetujui', 'dibatalkan'];
+
+    if (in_array($status, $allowed_status, true)) {
+        $stmt = $koneksi->prepare("
+            UPDATE penyewaan
+            SET status = ?
+            WHERE id = ?
+        ");
+        $stmt->bind_param("si", $status, $pesanan_id);
+        $stmt->execute();
+    }
+
+    header("Location: pesanan_list.php");
+    exit;
+}
+
+/* ===============================
+   AMBIL SEMUA PESANAN
+================================ */
 $stmt = $koneksi->prepare("
     SELECT 
         p.*,
         u.nama AS nama_penyewa,
-        u.no_telp AS email_penyewa,
+        u.no_telp AS kontak_penyewa,
         k.nama AS baju_nama,
         k.gambar AS baju_gambar,
         k.kategori AS baju_kategori
@@ -52,7 +77,7 @@ ob_start();
 <div class="overflow-x-auto rounded-xl bg-white dark:bg-gray-800 shadow-md p-4">
 
 <?php if ($pesanan->num_rows === 0): ?>
-    <p class="text-gray-600 dark:text-gray-300 text-center">
+    <p class="text-center text-gray-600 dark:text-gray-300">
         Belum ada data pemesanan.
     </p>
 <?php else: ?>
@@ -78,7 +103,7 @@ ob_start();
             <!-- Penyewa -->
             <td class="px-4 py-2 align-top">
                 <div class="font-medium"><?= htmlspecialchars($row['nama_penyewa']) ?></div>
-                <div class="text-xs text-gray-500"><?= htmlspecialchars($row['email_penyewa']) ?></div>
+                <div class="text-xs text-gray-500"><?= htmlspecialchars($row['kontak_penyewa']) ?></div>
             </td>
 
             <!-- Baju -->
@@ -93,22 +118,35 @@ ob_start();
             <td class="px-4 py-2"><?= htmlspecialchars($row['tanggal']) ?></td>
             <td class="px-4 py-2"><?= htmlspecialchars($row['sesi']) ?></td>
             <td class="px-4 py-2"><?= htmlspecialchars($row['ukuran']) ?></td>
-            <td class="px-4 py-2"><?= (int)$row['jumlah'] ?></td>
+            <td class="px-4 py-2"><?= (int) $row['jumlah'] ?></td>
 
-            <!-- Status -->
+            <!-- STATUS (EDITABLE) -->
             <td class="px-4 py-2">
-                <?php
-                $status = $row['status'];
-                $statusClass = match ($status) {
-                    'pending'   => 'bg-yellow-100 text-yellow-800',
-                    'disetujui' => 'bg-green-100 text-green-800',
-                    'ditolak'   => 'bg-red-100 text-red-800',
-                    default     => 'bg-gray-100 text-gray-800'
-                };
-                ?>
-                <span class="px-2 py-1 rounded-full text-sm font-medium <?= $statusClass ?>">
-                    <?= htmlspecialchars(ucfirst($status)) ?>
-                </span>
+                <form method="POST">
+                    <input type="hidden" name="pesanan_id" value="<?= $row['id'] ?>">
+                    <input type="hidden" name="update_status" value="1">
+
+                    <select name="status"
+                        onchange="this.form.submit()"
+                        class="px-3 py-1 rounded text-sm font-medium
+                        <?= match($row['status']) {
+                            'pending'     => 'bg-yellow-100 text-yellow-800',
+                            'disetujui'   => 'bg-green-100 text-green-800',
+                            'dibatalkan'  => 'bg-red-100 text-red-800',
+                            default       => 'bg-gray-100 text-gray-800'
+                        } ?>">
+                        
+                        <option value="pending" <?= $row['status']=='pending'?'selected':'' ?>>
+                            Pending
+                        </option>
+                        <option value="disetujui" <?= $row['status']=='disetujui'?'selected':'' ?>>
+                            Disetujui
+                        </option>
+                        <option value="dibatalkan" <?= $row['status']=='dibatalkan'?'selected':'' ?>>
+                            Dibatalkan
+                        </option>
+                    </select>
+                </form>
             </td>
 
         </tr>
@@ -117,7 +155,6 @@ ob_start();
 </table>
 
 <?php endif; ?>
-
 </div>
 
 <?php

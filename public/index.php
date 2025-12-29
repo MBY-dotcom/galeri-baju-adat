@@ -33,6 +33,26 @@ if ($kategori_aktif !== 'Semua') {
 // di bagian bawah file, setelah loop, jangan lupa:
 // if (isset($stmt) && $stmt instanceof mysqli_stmt) $stmt->close();
 // $koneksi->close();
+
+
+// ===============================
+// Ambil 10 testimoni bintang 5 terbaru
+// ===============================
+$stmtTesti = $koneksi->prepare("
+    SELECT 
+        t.rating,
+        t.komentar,
+        t.created_at,
+        u.nama AS nama_user
+    FROM testimoni t
+    JOIN users u ON u.id = t.user_id
+    WHERE t.rating = 5
+    ORDER BY t.created_at DESC
+    LIMIT 10
+");
+$stmtTesti->execute();
+$testimoni = $stmtTesti->get_result();
+
 ?>
 
 
@@ -186,298 +206,335 @@ if ($kategori_aktif !== 'Semua') {
     </section>
 
 <!-- KOLEKSI BAJU -->
-<section class="mx-auto px-4 py-8 scroll-mt-12" id="galeri">
-  <h3 class="text-2xl md:text-3xl font-bold mb-3 text-center text-[#001247] dark:text-[#fbe9d0]">
-    Koleksi Pilihan
-  </h3>
+<section id="galeri" class="py-16 scroll-mt-12 bg-white">
+  <div class="container mx-auto px-4">
 
-  <p class="text-center text-gray-600 dark:text-gray-300 mb-8">
-    Beberapa koleksi pilihan yang sering disewa dan terbaru
-  </p>
+    <h3 class="text-2xl md:text-3xl font-bold mb-3 text-center text-[#001247] dark:text-[#fbe9d0]">
+      Koleksi Pilihan
+    </h3>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-    <?php
-    $index = 0;
-    while ($row = $baju->fetch_assoc()):
-      $index++;
+    <p class="text-center text-gray-600 dark:text-gray-300 mb-10">
+      Beberapa koleksi pilihan yang sering disewa dan terbaru
+    </p>
 
-      // fake ribbon logic
-      if ($index <= 2) {
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      <?php
+      $index = 0;
+      while ($row = $baju->fetch_assoc()):
+        $index++;
+
+        if ($index <= 2) {
           $ribbon_text = "Best Seller";
           $ribbon_class = "bg-red-600";
-      } else {
+        } else {
           $ribbon_text = "New Arrival";
           $ribbon_class = "bg-indigo-600";
-      }
-    ?>
-      <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border hover:shadow-lg transition">
+        }
+      ?>
+        <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border hover:shadow-lg transition">
 
-        <!-- RIBBON -->
-        <span class="absolute top-3 left-3 text-xs text-white px-3 py-1 rounded-full <?= $ribbon_class ?>">
-          <?= $ribbon_text ?>
-        </span>
+          <!-- RIBBON -->
+          <span class="absolute top-3 left-3 text-xs text-white px-3 py-1 rounded-full <?= $ribbon_class ?>">
+            <?= $ribbon_text ?>
+          </span>
 
-        <a href="detail.php?id=<?= $row['id'] ?>">
-          <img src="gambar/<?= htmlspecialchars($row['gambar']) ?>"
-               alt="<?= htmlspecialchars($row['nama']) ?>"
-               class="w-full h-48 object-cover"
-               loading="lazy">
-        </a>
-
-        <div class="p-4">
-          <h4 class="font-semibold text-lg mb-1">
-            <?= htmlspecialchars($row['nama']) ?>
-          </h4>
-
-          <p class="text-sm text-gray-500 mb-2">
-            <?= htmlspecialchars($row['kategori']) ?>
-          </p>
-
-          <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
-            <?= htmlspecialchars(substr($row['deskripsi'], 0, 80)) ?>...
-          </p>
-
-          <p class="font-bold text-indigo-600 mb-3">
-            Rp <?= number_format($row['harga'], 0, ',', '.') ?>
-          </p>
-
-          <a href="detail.php?id=<?= $row['id'] ?>"
-             class="block text-center bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md text-sm transition">
-            Lihat Detail
+          <a href="detail.php?id=<?= $row['id'] ?>">
+            <img
+              src="gambar/<?= htmlspecialchars($row['gambar']) ?>"
+              alt="<?= htmlspecialchars($row['nama']) ?>"
+              class="w-full h-48 object-cover"
+              loading="lazy"
+            >
           </a>
+
+          <div class="p-4">
+            <h4 class="font-semibold text-lg mb-1">
+              <?= htmlspecialchars($row['nama']) ?>
+            </h4>
+
+            <p class="text-sm text-gray-500 mb-2">
+              <?= htmlspecialchars($row['kategori']) ?>
+            </p>
+
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
+              <?= htmlspecialchars(substr($row['deskripsi'], 0, 80)) ?>...
+            </p>
+
+            <p class="font-bold text-indigo-600 mb-3">
+              Rp <?= number_format($row['harga'], 0, ',', '.') ?>
+            </p>
+
+            <a
+              href="detail.php?id=<?= $row['id'] ?>"
+              class="block text-center bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md text-sm transition"
+            >
+              Lihat Detail
+            </a>
+          </div>
         </div>
-      </div>
-    <?php endwhile; ?>
+      <?php endwhile; ?>
+    </div>
+
   </div>
 </section>
 
 
-<!-- How It Works -->
- <section class="py-16 bg-gray-100" id="cara-sewa">
-            <div class="container mx-auto px-4">
-                <h2 class="text-3xl  text-[#0f2858] dark:text-[#fbe9d0] font-bold text-center mb-12 text-primary">Cara Mudah Sewa di Tempat Kami</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-                    <div class="flex flex-col items-center animate__animated animate__fadeInUp">
-                        <div class="w-20 h-20 bg-primary/20 text-primary rounded-full flex items-center justify-center mb-4 transition-transform duration-500 hover:scale-110">
-                            <i class="fas fa-search text-3xl"></i>
-                        </div>
-                        <h3 class="font-semibold text-lg text-gray-800 mb-2">1. Pilih Busana</h3>
-                        <p class="text-gray-600 text-sm">Jelajahi koleksi kami setelah login dan temukan busana favorit Anda.</p>
-                    </div>
-                    <div class="flex flex-col items-center animate__animated animate__fadeInUp animate__delay-1s">
-                        <div class="w-20 h-20 bg-primary/20 text-primary rounded-full flex items-center justify-center mb-4 transition-transform duration-500 hover:scale-110">
-                            <i class="fas fa-calendar-check text-3xl"></i>
-                        </div>
-                        <h3 class="font-semibold text-lg text-gray-800 mb-2">2. Reservasi</h3>
-                        <p class="text-gray-600 text-sm">Hubungi kami untuk cek ketersediaan dan booking tanggal.</p>
-                    </div>
-                    <div class="flex flex-col items-center animate__animated animate__fadeInUp animate__delay-2s">
-                        <div class="w-20 h-20 bg-primary/20 text-primary rounded-full flex items-center justify-center mb-4 transition-transform duration-500 hover:scale-110">
-                            <i class="fas fa-hand-holding-heart text-3xl"></i>
-                        </div>
-                        <h3 class="font-semibold text-lg text-gray-800 mb-2">3. Ambil & Pakai</h3>
-                        <p class="text-gray-600 text-sm">Ambil busana di galeri kami dan nikmati momen spesial Anda.</p>
-                    </div>
-                    <div class="flex flex-col items-center animate__animated animate__fadeInUp animate__delay-3s">
-                        <div class="w-20 h-20 bg-primary/20 text-primary rounded-full flex items-center justify-center mb-4 transition-transform duration-500 hover:scale-110">
-                            <i class="fas fa-box-open text-3xl"></i>
-                        </div>
-                        <h3 class="font-semibold text-lg text-gray-800 mb-2">4. Kembalikan</h3>
-                        <p class="text-gray-600 text-sm">Kembalikan busana sesuai dengan tanggal yang disepakati.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+<!-- HOW IT WORKS -->
+<section id="cara-sewa" class="py-16 bg-gray-50 scroll-mt-12">
+  <div class="container mx-auto px-4">
 
+    <h2 class="text-3xl font-bold text-center mb-12 text-[#001247] dark:text-[#fbe9d0]">
+      Cara Mudah Sewa di Tempat Kami
+    </h2>
 
-  <!-- FAQ SECTION -->
-  <section id="faq" class="py-8 bg-secondary scroll-mt-12">
-    <div class="container mx-auto px-2">
-      <div class="max-w-4xl mx-auto">
-        <div class="text-center mb-12">
-          <h2 class="text-2xl md:text-3xl font-bold mb-3 text-center text-[#001247] dark:text-[#fbe9d0]">Pertanyaan yang Sering Diajukan</h2>
-          <p class="text-gray-600">
-            Temukan jawaban atas pertanyaan umum seputar penyewaan baju adat
-          </p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-center">
+
+      <!-- Step 1 -->
+      <div class="flex flex-col items-center">
+        <div class="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 hover:scale-110">
+          <i class="fas fa-search text-3xl"></i>
         </div>
-
-        <div class="space-y-4">
-          <!-- FAQ Item 1 -->
-          <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-            <button class="faq-question w-full text-left p-5 flex justify-between items-center focus:outline-none">
-              <span class="font-medium">Kapan baju mulai bisa diambil ?</span>
-              <i class="fas fa-chevron-down text-primary-light transition-transform duration-300"></i>
-            </button>
-            <div class="faq-answer px-5 pb-5 hidden">
-              <p class="text-gray-700">
-                Baju baru boleh diambil antara H-1 sebelum acara.
-              </p>
-            </div>
-          </div>
-
-           <!-- FAQ Item 2 -->
-          <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-            <button class="faq-question w-full text-left p-5 flex justify-between items-center focus:outline-none">
-              <span class="font-medium">Kapan sebiknya baju dikembalikan?</span>
-              <i class="fas fa-chevron-down text-primary-light transition-transform duration-300"></i>
-            </button>
-            <div class="faq-answer px-5 pb-5 hidden">
-              <p class="text-gray-700">
-                Baju sebaiknya dikembalikan hari H setelah selesai acara hingga paling lambat H+1 acara. Keterlambatan pengembalian baju akan dikenai denda.
-              </p>
-            </div>
-          </div>
-
-          <!-- FAQ Item 3 -->
-          <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-            <button class="faq-question w-full text-left p-5 flex justify-between items-center focus:outline-none">
-              <span class="font-medium">Apakah tersedia layanan pengantaran?</span>
-              <i class="fas fa-chevron-down text-primary-light transition-transform duration-300"></i>
-            </button>
-            <div class="faq-answer px-5 pb-5 hidden">
-              <p class="text-gray-700">
-                Ya, kami menyediakan layanan pengantaran dengan biaya tambahan yang disesuaikan dengan jarak lokasi pengantaran. Kami juga bekerja sama dengan jasa pengiriman untuk area yang lebih jauh.
-              </p>
-            </div>
-          </div>
-
-          <!-- FAQ Item 4 -->
-          <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-            <button class="faq-question w-full text-left p-5 flex justify-between items-center focus:outline-none">
-              <span class="font-medium">Bagaimana jika ukuran baju tidak pas?</span>
-              <i class="fas fa-chevron-down text-primary-light transition-transform duration-300"></i>
-            </button>
-            <div class="faq-answer px-5 pb-5 hidden">
-              <p class="text-gray-700">
-                Kami menyediakan layanan fitting sebelum penyewaan untuk memastikan ukuran pas. Fitting boleh dilakukan kapanpun bahkan jauh hari sebelum hari H.
-              </p>
-            </div>
-          </div>
-
-          <!-- FAQ Item 5 -->
-          <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-            <button class="faq-question w-full text-left p-5 flex justify-between items-center focus:outline-none">
-              <span class="font-medium">Apakah ada diskon untuk penyewaan dalam jumlah banyak?</span>
-              <i class="fas fa-chevron-down text-primary-light transition-transform duration-300"></i>
-            </button>
-            <div class="faq-answer px-5 pb-5 hidden">
-              <p class="text-gray-700">
-                Tentu saja! Kami memberikan diskon khusus untuk penyewaan lebih dari 10 baju. Silakan hubungi kami via WhatsApp untuk negosiasi harga lebih lanjut.
-              </p>
-            </div>
-          </div>
-
-          <!-- FAQ Item 6 -->
-          <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-            <button class="faq-question w-full text-left p-5 flex justify-between items-center focus:outline-none">
-              <span class="font-medium">Bagaimana kebersihan baju yang disewa?</span>
-              <i class="fas fa-chevron-down text-primary-light transition-transform duration-300"></i>
-            </button>
-            <div class="faq-answer px-5 pb-5 hidden">
-              <p class="text-gray-700">
-                Kami memiliki standar kebersihan yang ketat. Setiap baju yang kembali dari penyewaan akan melalui proses dry clean profesional sebelum disewakan kembali kepada pelanggan berikutnya.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-    <!-- TESTIMONIAL SECTION -->
-  <section id="testimonial" class="py-8 bg-white scroll-mt-12">
-    <div class="container mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="text-2xl md:text-3xl font-bold mb-3 text-center text-[#001247] dark:text-[#fbe9d0]">Apa Kata Pelanggan Kami</h2>
-        <p class="text-gray-600 max-w-2xl mx-auto">
-          Testimoni jujur dari pelanggan yang telah menggunakan jasa kami
+        <h3 class="font-semibold text-lg text-gray-800 mb-2">
+          1. Pilih Busana
+        </h3>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          Jelajahi koleksi kami dan temukan busana yang sesuai dengan kebutuhan Anda.
         </p>
       </div>
 
-      <div class="swiper testimonial-swiper">
-        <div class="swiper-wrapper pb-12">
-          <!-- Testimonial 1 -->
-          <div class="swiper-slide">
-            <div class="testimonial-card p-8 h-full">
-              <div class="quote-icon mb-4">
-                <i class="fas fa-quote-left"></i>
-              </div>
-              <p class="text-gray-700 mb-6">
-                "Sangat puas dengan pelayanan dan kualitas bajunya. Baju adat Jawa yang saya sewa untuk pernikahan adik sangat bagus dan nyaman dipakai."
-              </p>
-              <div class="flex items-center">
-                <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Testimoni" class="w-12 h-12 rounded-full mr-4">
-                <div>
-                  <h4 class="font-bold">Dewi Lestari</h4>
-                  <p class="text-sm text-gray-600">Pernikahan, Jakarta</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Testimonial 2 -->
-          <div class="swiper-slide">
-            <div class="testimonial-card p-8 h-full">
-              <div class="quote-icon mb-4">
-                <i class="fas fa-quote-left"></i>
-              </div>
-              <p class="text-gray-700 mb-6">
-                "Proses sewa mudah dan cepat. Baju adat Bali untuk acara wisuda sangat cantik dan mendapat banyak pujian. Harganya juga terjangkau."
-              </p>
-              <div class="flex items-center">
-                <img src="https://randomuser.me/api/portraits/men/41.jpg" alt="Testimoni" class="w-12 h-12 rounded-full mr-4">
-                <div>
-                  <h4 class="font-bold">Budi Santoso</h4>
-                  <p class="text-sm text-gray-600">Wisuda, Bandung</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Testimonial 3 -->
-          <div class="swiper-slide">
-            <div class="testimonial-card p-8 h-full">
-              <div class="quote-icon mb-4">
-                <i class="fas fa-quote-left"></i>
-              </div>
-              <p class="text-gray-700 mb-6">
-                "Koleksinya lengkap banget! Saya bisa menemukan baju adat Dayak yang autentik untuk festival budaya. Pelayanannya ramah dan profesional."
-              </p>
-              <div class="flex items-center">
-                <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Testimoni" class="w-12 h-12 rounded-full mr-4">
-                <div>
-                  <h4 class="font-bold">Siti Rahayu</h4>
-                  <p class="text-sm text-gray-600">Festival Budaya, Kalimantan</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Testimonial 4 -->
-          <div class="swiper-slide">
-            <div class="testimonial-card p-8 h-full">
-              <div class="quote-icon mb-4">
-                <i class="fas fa-quote-left"></i>
-              </div>
-              <p class="text-gray-700 mb-6">
-                "Sudah beberapa kali sewa di sini untuk acara sekolah anak. Baju selalu bersih dan rapi. Recommended banget untuk yang butuh baju adat berkualitas."
-              </p>
-              <div class="flex items-center">
-                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Testimoni" class="w-12 h-12 rounded-full mr-4">
-                <div>
-                  <h4 class="font-bold">Agus Setiawan</h4>
-                  <p class="text-sm text-gray-600">Acara Sekolah, Surabaya</p>
-                </div>
-              </div>
-            </div>
+      <!-- Step 2 -->
+      <div class="flex flex-col items-center">
+        <div class="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 hover:scale-110">
+          <i class="fas fa-calendar-check text-3xl"></i>
+        </div>
+        <h3 class="font-semibold text-lg text-gray-800 mb-2">
+          2. Reservasi
+        </h3>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          Hubungi kami untuk mengecek ketersediaan dan melakukan booking.
+        </p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="flex flex-col items-center">
+        <div class="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 hover:scale-110">
+          <i class="fas fa-hand-holding-heart text-3xl"></i>
+        </div>
+        <h3 class="font-semibold text-lg text-gray-800 mb-2">
+          3. Ambil & Pakai
+        </h3>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          Ambil busana di galeri kami dan gunakan untuk momen spesial Anda.
+        </p>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="flex flex-col items-center">
+        <div class="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 hover:scale-110">
+          <i class="fas fa-box-open text-3xl"></i>
+        </div>
+        <h3 class="font-semibold text-lg text-gray-800 mb-2">
+          4. Kembalikan
+        </h3>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          Kembalikan busana sesuai dengan jadwal yang telah disepakati.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- FAQ SECTION -->
+<section id="faq" class="py-16 bg-gray-100 dark:bg-[#0f172a] scroll-mt-12">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto">
+
+      <!-- Heading -->
+      <div class="text-center mb-12">
+        <h2 class="text-2xl md:text-3xl font-bold mb-3 text-[#001247] dark:text-[#fbe9d0]">
+          Pertanyaan yang Sering Diajukan
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300">
+          Temukan jawaban atas pertanyaan umum seputar penyewaan baju adat
+        </p>
+      </div>
+
+      <!-- FAQ List -->
+      <div class="space-y-4">
+
+        <!-- FAQ Item -->
+        <div class="faq-item bg-white/90 dark:bg-[#1e293b] rounded-xl shadow-sm hover:shadow-md transition overflow-hidden">
+          <button
+            class="faq-question w-full flex justify-between items-center p-5 text-left
+                   hover:bg-primary/5 dark:hover:bg-white/5 transition focus:outline-none">
+            <span class="font-medium text-gray-800 dark:text-gray-100">
+              Kapan baju mulai bisa diambil?
+            </span>
+            <i class="fas fa-chevron-down text-[#0f2858]/70 dark:text-[#fbe9d0]/80 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer px-5 pb-5 hidden">
+            <p class="text-gray-700 dark:text-gray-300">
+              Baju baru boleh diambil antara H-1 sebelum acara.
+            </p>
           </div>
         </div>
-        
-        <!-- Add pagination -->
-        <div class="swiper-pagination mt-6"></div>
+
+        <!-- FAQ Item -->
+        <div class="faq-item bg-white/90 dark:bg-[#1e293b] rounded-xl shadow-sm hover:shadow-md transition overflow-hidden">
+          <button class="faq-question w-full flex justify-between items-center p-5 text-left
+                         hover:bg-primary/5 dark:hover:bg-white/5 transition focus:outline-none">
+            <span class="font-medium text-gray-800 dark:text-gray-100">
+              Kapan sebaiknya baju dikembalikan?
+            </span>
+            <i class="fas fa-chevron-down text-[#0f2858]/70 dark:text-[#fbe9d0]/80 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer px-5 pb-5 hidden">
+            <p class="text-gray-700 dark:text-gray-300">
+              Baju dikembalikan pada hari H setelah acara hingga maksimal H+1. Keterlambatan akan dikenakan denda.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ Item -->
+        <div class="faq-item bg-white/90 dark:bg-[#1e293b] rounded-xl shadow-sm hover:shadow-md transition overflow-hidden">
+          <button class="faq-question w-full flex justify-between items-center p-5 text-left
+                         hover:bg-primary/5 dark:hover:bg-white/5 transition focus:outline-none">
+            <span class="font-medium text-gray-800 dark:text-gray-100">
+              Apakah tersedia layanan pengantaran?
+            </span>
+            <i class="fas fa-chevron-down text-[#0f2858]/70 dark:text-[#fbe9d0]/80 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer px-5 pb-5 hidden">
+            <p class="text-gray-700 dark:text-gray-300">
+              Ya, tersedia layanan pengantaran dengan biaya tambahan sesuai jarak lokasi.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ Item -->
+        <div class="faq-item bg-white/90 dark:bg-[#1e293b] rounded-xl shadow-sm hover:shadow-md transition overflow-hidden">
+          <button class="faq-question w-full flex justify-between items-center p-5 text-left
+                         hover:bg-primary/5 dark:hover:bg-white/5 transition focus:outline-none">
+            <span class="font-medium text-gray-800 dark:text-gray-100">
+              Bagaimana jika ukuran baju tidak pas?
+            </span>
+            <i class="fas fa-chevron-down text-[#0f2858]/70 dark:text-[#fbe9d0]/80 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer px-5 pb-5 hidden">
+            <p class="text-gray-700 dark:text-gray-300">
+              Kami menyediakan layanan fitting yang bisa dilakukan jauh hari sebelum acara.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ Item -->
+        <div class="faq-item bg-white/90 dark:bg-[#1e293b] rounded-xl shadow-sm hover:shadow-md transition overflow-hidden">
+          <button class="faq-question w-full flex justify-between items-center p-5 text-left
+                         hover:bg-primary/5 dark:hover:bg-white/5 transition focus:outline-none">
+            <span class="font-medium text-gray-800 dark:text-gray-100">
+              Apakah ada diskon untuk penyewaan banyak?
+            </span>
+            <i class="fas fa-chevron-down text-[#0f2858]/70 dark:text-[#fbe9d0]/80 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer px-5 pb-5 hidden">
+            <p class="text-gray-700 dark:text-gray-300">
+              Ya, diskon khusus tersedia untuk penyewaan lebih dari 10 baju.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ Item -->
+        <div class="faq-item bg-white/90 dark:bg-[#1e293b] rounded-xl shadow-sm hover:shadow-md transition overflow-hidden">
+          <button class="faq-question w-full flex justify-between items-center p-5 text-left
+                         hover:bg-primary/5 dark:hover:bg-white/5 transition focus:outline-none">
+            <span class="font-medium text-gray-800 dark:text-gray-100">
+              Bagaimana kebersihan baju yang disewa?
+            </span>
+            <i class="fas fa-chevron-down text-[#0f2858]/70 dark:text-[#fbe9d0]/80 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer px-5 pb-5 hidden">
+            <p class="text-gray-700 dark:text-gray-300">
+              Setiap baju melalui proses dry clean profesional sebelum disewakan kembali.
+            </p>
+          </div>
+        </div>
+
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
+
+    <!-- TESTIMONIAL SECTION -->
+    <section id="testimonial" class="py-12 bg-white scroll-mt-12">
+      <div class="container mx-auto px-4">
+
+        <!-- Heading -->
+        <div class="text-center mb-12">
+          <h2 class="text-2xl md:text-3xl font-bold mb-3 text-[#001247]">
+            Apa Kata Pelanggan Kami
+          </h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">
+            Testimoni jujur dari pelanggan yang telah menggunakan jasa kami
+          </p>
+        </div>
+
+        <!-- Swiper -->
+        <div class="swiper testimonial-swiper">
+          <div class="swiper-wrapper">
+
+            <?php if ($testimoni->num_rows === 0): ?>
+              <!-- Empty State -->
+              <div class="swiper-slide">
+                <div class="testimonial-card p-8 text-center mx-auto max-w-md">
+                  <p class="text-gray-500 italic">
+                    Belum ada testimoni bintang 5.
+                  </p>
+                </div>
+              </div>
+            <?php else: ?>
+              <?php while ($t = $testimoni->fetch_assoc()): ?>
+                <div class="swiper-slide">
+                  <div class="testimonial-card p-8 mx-auto max-w-md bg-gray-50 rounded-xl shadow">
+
+                    <div class="mb-4 text-[#001247]">
+                      <i class="fas fa-quote-left text-2xl"></i>
+                    </div>
+
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                      “<?= htmlspecialchars($t['komentar']) ?>”
+                    </p>
+
+                    <!-- Rating -->
+                    <div class="flex mb-4">
+                      <?php for ($i = 0; $i < 5; $i++): ?>
+                        <i class="fas fa-star text-yellow-400 mr-1"></i>
+                      <?php endfor; ?>
+                    </div>
+
+                    <div>
+                      <h4 class="font-semibold text-gray-800">
+                        <?= htmlspecialchars($t['nama_user']) ?>
+                      </h4>
+                      <p class="text-sm text-gray-500">
+                        <?= date('d M Y', strtotime($t['created_at'])) ?>
+                      </p>
+                    </div>
+
+                  </div>
+                </div>
+              <?php endwhile; ?>
+            <?php endif; ?>
+
+          </div>
+
+          <!-- Pagination -->
+          <div class="swiper-pagination mt-6"></div>
+        </div>
+
+      </div>
+    </section>
+
 
 <!-- Contact -->
  <section class="py-16 bg-white" id="kontak">
