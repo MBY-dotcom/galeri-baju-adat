@@ -466,74 +466,73 @@ $testimoni = $stmtTesti->get_result();
 
 
     <!-- TESTIMONIAL SECTION -->
-    <section id="testimonial" class="py-12 bg-white scroll-mt-12">
-      <div class="container mx-auto px-4">
+<section id="testimonial" class="py-12 bg-white scroll-mt-12">
+  <div class="container mx-auto px-4">
 
-        <!-- Heading -->
-        <div class="text-center mb-12">
-          <h2 class="text-2xl md:text-3xl font-bold mb-3 text-[#001247]">
-            Apa Kata Pelanggan Kami
-          </h2>
-          <p class="text-gray-600 max-w-2xl mx-auto">
-            Testimoni jujur dari pelanggan yang telah menggunakan jasa kami
-          </p>
-        </div>
+    <div class="text-center mb-12">
+      <h2 class="text-2xl md:text-3xl font-bold mb-3 text-[#001247]">
+        Apa Kata Pelanggan Kami
+      </h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">
+        Testimoni jujur dari pelanggan yang telah menggunakan jasa kami
+      </p>
+    </div>
 
-        <!-- Swiper -->
-        <div class="swiper testimonial-swiper">
-          <div class="swiper-wrapper">
+    <div class="swiper testimonial-swiper">
+      <div class="swiper-wrapper">
 
-            <?php if ($testimoni->num_rows === 0): ?>
-              <!-- Empty State -->
-              <div class="swiper-slide">
-                <div class="testimonial-card p-8 text-center mx-auto max-w-md">
-                  <p class="text-gray-500 italic">
-                    Belum ada testimoni bintang 5.
+        <?php if ($testimoni->num_rows === 0): ?>
+          <div class="swiper-slide">
+            <div class="testimonial-card p-8 text-center mx-auto max-w-md">
+              <p class="text-gray-500 italic">
+                Belum ada testimoni.
+              </p>
+            </div>
+          </div>
+        <?php else: ?>
+          <?php while ($t = $testimoni->fetch_assoc()): ?>
+            <div class="swiper-slide">
+              <div class="testimonial-card p-8 mx-auto max-w-md bg-gray-50 rounded-xl shadow">
+
+                <div class="mb-4 text-[#001247]">
+                  <i class="fas fa-quote-left text-2xl"></i>
+                </div>
+
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                  “<?= htmlspecialchars($t['komentar']) ?>”
+                </p>
+
+                <div class="flex mb-4">
+                  <?php 
+                  $rating_user = (int)$t['rating']; 
+                  for ($i = 1; $i <= 5; $i++): 
+                    $star_color = ($i <= $rating_user) ? 'text-yellow-400' : 'text-gray-300';
+                  ?>
+                    <i class="fas fa-star <?= $star_color ?> mr-1"></i>
+                  <?php endfor; ?>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-gray-800">
+                    <?= htmlspecialchars($t['nama_user']) ?>
+                  </h4>
+                  <p class="text-sm text-gray-500">
+                    <?= date('d M Y', strtotime($t['created_at'])) ?>
                   </p>
                 </div>
+
               </div>
-            <?php else: ?>
-              <?php while ($t = $testimoni->fetch_assoc()): ?>
-                <div class="swiper-slide">
-                  <div class="testimonial-card p-8 mx-auto max-w-md bg-gray-50 rounded-xl shadow">
-
-                    <div class="mb-4 text-[#001247]">
-                      <i class="fas fa-quote-left text-2xl"></i>
-                    </div>
-
-                    <p class="text-gray-700 mb-6 leading-relaxed">
-                      “<?= htmlspecialchars($t['komentar']) ?>”
-                    </p>
-
-                    <!-- Rating -->
-                    <div class="flex mb-4">
-                      <?php for ($i = 0; $i < 5; $i++): ?>
-                        <i class="fas fa-star text-yellow-400 mr-1"></i>
-                      <?php endfor; ?>
-                    </div>
-
-                    <div>
-                      <h4 class="font-semibold text-gray-800">
-                        <?= htmlspecialchars($t['nama_user']) ?>
-                      </h4>
-                      <p class="text-sm text-gray-500">
-                        <?= date('d M Y', strtotime($t['created_at'])) ?>
-                      </p>
-                    </div>
-
-                  </div>
-                </div>
-              <?php endwhile; ?>
-            <?php endif; ?>
-
-          </div>
-
-          <!-- Pagination -->
-          <div class="swiper-pagination mt-6"></div>
-        </div>
+            </div>
+          <?php endwhile; ?>
+        <?php endif; ?>
 
       </div>
-    </section>
+
+      <div class="swiper-pagination mt-6"></div>
+    </div>
+
+  </div>
+</section>
 
 
 <!-- Contact -->

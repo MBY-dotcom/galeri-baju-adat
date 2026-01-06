@@ -22,11 +22,15 @@
             Daftar Pesanan
         </a>
 
-          <a href="user_list.php"
+        <a href="user_list.php"
            class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
             Daftar User
         </a>
 
+         <a href="testimoni_list.php"
+           class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
+            Daftar Testimoni
+        </a>
 
     </nav>
     
@@ -67,9 +71,14 @@
             Daftar Pesanan
         </a>
 
-          <a href="user_list.php"
+        <a href="user_list.php"
            class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
             Daftar User
+        </a>
+
+        <a href="testimoni_list.php"
+           class="block px-4 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
+            Daftar Testimoni
         </a>
 
         <a href="../index.php"
