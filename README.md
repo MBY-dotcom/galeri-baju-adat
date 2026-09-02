@@ -19,6 +19,7 @@ Halaman CRUD Admin untuk manajemen koleksi baju.
 
 Media promosi awal & memperluas jangkauan UMKM.
 Menjadi transisi awal pemilik & pelanggan yang belum terbiasa teknologi (UMKM pedesaan).
+
 ✨ V2 (Selesai)
 
 -Versi ini mulai fokus pada otomatisasi proses penyewaan.
@@ -40,6 +41,7 @@ Capacity-Based Allocation
 
 Untuk Pemilik Galeri: Mencegah double booking, memperbaiki pencatatan, dan melacak penggunaan baju.
 Untuk Pelanggan: Proses penyewaan lebih transparan, adil, dan terjamin ketersediaannya.
+
 🚧 V3 (Dalam tahap desain konsep)
 
 -Fase peningkatan arsitektur & keamanan.
@@ -48,6 +50,7 @@ Untuk Pelanggan: Proses penyewaan lebih transparan, adil, dan terjamin ketersedi
 
 Integrasi API & peningkatan keamanan.
 Penggunaan metode pembayaran online — terutama DP — untuk meminimalisir kerugian akibat pembatalan mendadak.
+
 🪄 V4 (Konsep Lanjutan)
 
 -Fitur inovatif untuk pengalaman pengguna.
