@@ -19,7 +19,7 @@ Proyek ini akan terus di-upgrade secara bertahap mengikuti kebutuhan pemilik dan
   1. Media promosi awal & memperluas jangkauan UMKM.
   2. Menjadi transisi awal pemilik & pelanggan yang belum terbiasa teknologi (UMKM pedesaan).
 
-🚧 V2 (Sedang Dikerjakan)
+✨ V2 (Selesai)
 
 -Versi ini mulai fokus pada otomatisasi proses penyewaan.
 
@@ -40,7 +40,7 @@ Proyek ini akan terus di-upgrade secara bertahap mengikuti kebutuhan pemilik dan
   1. Untuk Pemilik Galeri: Mencegah double booking, memperbaiki pencatatan, dan melacak penggunaan baju.
   2. Untuk Pelanggan: Proses penyewaan lebih transparan, adil, dan terjamin ketersediaannya.
 
-🧩 V3 (Konsep)
+🚧 V3 (Dalam tahap desain konsep)
 
 -Fase peningkatan arsitektur & keamanan.
 
