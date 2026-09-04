@@ -1,3 +1,19 @@
+<?php
+session_start();
+require_once __DIR__ . '/app/config/koneksi.php';
+
+// Ensure only authenticated admins can access this page
+if (!isset($_SESSION['admin_login']) || $_SESSION['admin_login'] !== true) {
+    header('Location: login.php');
+    exit;
+}
+
+// Generate CSRF token if not present
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(16));
+}
+$csrf = $_SESSION['csrf_token'];
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -11,6 +27,8 @@
     <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Tambah Koleksi Baju</h2>
     
     <form action="simpan_baju.php" method="POST" enctype="multipart/form-data" class="space-y-4">
+      <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8'); ?>">
+
       <div>
         <label for="nama" class="block text-sm font-medium text-gray-700">Nama Baju</label>
         <input type="text" name="nama" id="nama" required class="mt-1 w-full border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500">

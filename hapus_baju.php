@@ -1,24 +1,44 @@
 <?php
-$koneksi = new mysqli("localhost", "root", "", "db_bajuadat");
+session_start();
+require_once 'app/config/koneksi.php';
 
-$id = $_GET['id'];
-
-// Ambil nama file gambar yang mau dihapus
-$data = $koneksi->query("SELECT gambar FROM koleksi_baju WHERE id = $id")->fetch_assoc();
-$nama_gambar = $data['gambar'];
-
-// Hapus gambar dari folder jika ada
-if (file_exists("gambar/" . $nama_gambar)) {
-    unlink("gambar/" . $nama_gambar);
+if (!isset($_SESSION['admin_login']) || $_SESSION['admin_login'] !== true) {
+    header('Location: login.php');
+    exit;
 }
 
-// Hapus data dari database
-$hapus = $koneksi->query("DELETE FROM koleksi_baju WHERE id = $id");
+$id = intval($_GET['id'] ?? 0);
+if ($id <= 0) {
+    die('ID tidak valid');
+}
 
-// Redirect balik ke admin_list.php
-if ($hapus) {
-    header("Location: admin_list.php");
+// Fetch filename safely using prepared statement
+$stmt = $koneksi->prepare('SELECT gambar FROM koleksi_baju WHERE id = ?');
+$stmt->bind_param('i', $id);
+$stmt->execute();
+$res = $stmt->get_result();
+if (!$res || $res->num_rows === 0) {
+    die('Data tidak ditemukan');
+}
+$row = $res->fetch_assoc();
+$nama_gambar = $row['gambar'];
+
+$uploadDir = realpath(__DIR__ . '/gambar');
+$targetPath = realpath(__DIR__ . '/gambar/' . $nama_gambar);
+if ($targetPath && $uploadDir && strpos($targetPath, $uploadDir) === 0 && file_exists($targetPath)) {
+    unlink($targetPath);
+}
+
+// Delete row
+$del = $koneksi->prepare('DELETE FROM koleksi_baju WHERE id = ?');
+$del->bind_param('i', $id);
+$ok = $del->execute();
+
+if ($ok) {
+    header('Location: admin_list.php');
+    exit;
 } else {
-    echo "Gagal menghapus data!";
+    error_log('Delete failed: ' . $del->error);
+    die('Gagal menghapus data!');
 }
 ?>

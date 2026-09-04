@@ -1,17 +1,40 @@
 <?php
 session_start();
-$koneksi = new mysqli("localhost", "root", "", "db_bajuadat");
+require_once 'app/config/koneksi.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $username = $_POST['username'];
-  $password = md5($_POST['password']);
+  $username = trim($_POST['username']);
+  $password = $_POST['password'];
 
-  $result = $koneksi->query("SELECT * FROM admin WHERE username = '$username' AND password = '$password'");
+  // Prepared statement to fetch admin user
+  $stmt = $koneksi->prepare('SELECT id, password FROM admin WHERE username = ?');
+  $stmt->bind_param('s', $username);
+  $stmt->execute();
+  $res = $stmt->get_result();
 
-  if ($result->num_rows > 0) {
-    $_SESSION['admin_login'] = true;
-    header("Location: admin_list.php");
-    exit;
+  if ($res && $row = $res->fetch_assoc()) {
+    $stored = $row['password'];
+
+    // Support both password_hash() and legacy MD5. If MD5 matches, rehash to password_hash.
+    if (password_verify($password, $stored)) {
+      // ok
+    } elseif (md5($password) === $stored) {
+      // rehash with password_hash
+      $newHash = password_hash($password, PASSWORD_DEFAULT);
+      $up = $koneksi->prepare('UPDATE admin SET password = ? WHERE id = ?');
+      $up->bind_param('si', $newHash, $row['id']);
+      $up->execute();
+    } else {
+      $error = "Username atau password salah!";
+    }
+
+    if (empty($error)) {
+      // login success
+      session_regenerate_id(true);
+      $_SESSION['admin_login'] = true;
+      header("Location: admin_list.php");
+      exit;
+    }
   } else {
     $error = "Username atau password salah!";
   }
@@ -31,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h2 class="text-2xl font-bold mb-6 text-indigo-700 text-center">Login Admin</h2>
     
     <?php if (isset($error)) : ?>
-      <p class="text-red-600 text-sm mb-4"><?= $error; ?></p>
+      <p class="text-red-600 text-sm mb-4"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></p>
     <?php endif; ?>
 
     <form method="post">

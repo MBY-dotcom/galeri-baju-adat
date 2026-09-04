@@ -4,7 +4,7 @@ if (!isset($_SESSION['admin_login'])) {
   header("Location: login.php");
   exit;
 }
-$koneksi = new mysqli("localhost", "root", "", "db_bajuadat");
+require_once 'app/config/koneksi.php';
 $baju = $koneksi->query("SELECT * FROM koleksi_baju ORDER BY created_at DESC");
 ?>
 
@@ -40,22 +40,21 @@ $baju = $koneksi->query("SELECT * FROM koleksi_baju ORDER BY created_at DESC");
           <?php $no = 1; while($row = $baju->fetch_assoc()): ?>
             <tr class="border-b">
               <td class="px-4 py-2"><?php echo $no++; ?></td>
-              <td class="px-4 py-2"><img src="gambar/<?php echo $row['gambar']; ?>" alt="" class="w-16 h-16 object-cover rounded"></td>
-              <td class="px-4 py-2"><?php echo $row['nama']; ?></td>
-              <td class="px-4 py-2"><?php echo $row['harga']; ?></td>
-              <td class="px-4 py-2"><?php echo $row['kategori']; ?></td>
-              <td class="px-4 py-2"><?php echo $row['ukuran']; ?></td>
-              <td class="px-4 py-2"><?php echo $row['deskripsi']; ?></td>
+              <td class="px-4 py-2"><img src="gambar/<?php echo htmlspecialchars($row['gambar'], ENT_QUOTES, 'UTF-8'); ?>" alt="" class="w-16 h-16 object-cover rounded"></td>
+              <td class="px-4 py-2"><?php echo htmlspecialchars($row['nama'], ENT_QUOTES, 'UTF-8'); ?></td>
+              <td class="px-4 py-2"><?php echo htmlspecialchars($row['harga'], ENT_QUOTES, 'UTF-8'); ?></td>
+              <td class="px-4 py-2"><?php echo htmlspecialchars($row['kategori'], ENT_QUOTES, 'UTF-8'); ?></td>
+              <td class="px-4 py-2"><?php echo htmlspecialchars($row['ukuran'], ENT_QUOTES, 'UTF-8'); ?></td>
+              <td class="px-4 py-2"><?php echo nl2br(htmlspecialchars($row['deskripsi'], ENT_QUOTES, 'UTF-8')); ?></td>
               <td class="px-4 py-2 space-x-2">
-                <a href="edit_baju.php?id=<?php echo $row['id']; ?>" class="text-blue-600 hover:underline">Edit</a>
-                <a href="hapus_baju.php?id=<?php echo $row['id']; ?>" class="text-red-600 hover:underline" onclick="return confirm('Yakin hapus data ini?')">Hapus</a>
+                <a href="edit_baju.php?id=<?php echo intval($row['id']); ?>" class="text-blue-600 hover:underline">Edit</a>
+                <a href="hapus_baju.php?id=<?php echo intval($row['id']); ?>" class="text-red-600 hover:underline" onclick="return confirm('Yakin ingin menghapus?');">Hapus</a>
               </td>
             </tr>
           <?php endwhile; ?>
         </tbody>
       </table>
     </div>
-
   </div>
 
 </body>
