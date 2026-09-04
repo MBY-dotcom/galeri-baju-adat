@@ -1,11 +1,19 @@
 <?php
 session_start();
-if (!isset($_SESSION['admin_login'])) {
-  header("Location: login.php");
-  exit;
-}
 require_once 'app/config/koneksi.php';
-$baju = $koneksi->query("SELECT * FROM koleksi_baju ORDER BY created_at DESC");
+
+if (!isset($_SESSION['admin_login']) || $_SESSION['admin_login'] !== true) {
+    header('Location: login.php');
+    exit;
+}
+
+// Ensure CSRF token exists
+if (empty($_SESSION['csrf_token'])) $_SESSION['csrf_token'] = bin2hex(random_bytes(16));
+$csrf = $_SESSION['csrf_token'];
+
+$baju = $koneksi->prepare('SELECT * FROM koleksi_baju ORDER BY created_at DESC');
+$baju->execute();
+$result = $baju->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +45,7 @@ $baju = $koneksi->query("SELECT * FROM koleksi_baju ORDER BY created_at DESC");
           </tr>
         </thead>
         <tbody>
-          <?php $no = 1; while($row = $baju->fetch_assoc()): ?>
+          <?php $no = 1; while($row = $result->fetch_assoc()): ?>
             <tr class="border-b">
               <td class="px-4 py-2"><?php echo $no++; ?></td>
               <td class="px-4 py-2"><img src="gambar/<?php echo htmlspecialchars($row['gambar'], ENT_QUOTES, 'UTF-8'); ?>" alt="" class="w-16 h-16 object-cover rounded"></td>
@@ -48,7 +56,11 @@ $baju = $koneksi->query("SELECT * FROM koleksi_baju ORDER BY created_at DESC");
               <td class="px-4 py-2"><?php echo nl2br(htmlspecialchars($row['deskripsi'], ENT_QUOTES, 'UTF-8')); ?></td>
               <td class="px-4 py-2 space-x-2">
                 <a href="edit_baju.php?id=<?php echo intval($row['id']); ?>" class="text-blue-600 hover:underline">Edit</a>
-                <a href="hapus_baju.php?id=<?php echo intval($row['id']); ?>" class="text-red-600 hover:underline" onclick="return confirm('Yakin ingin menghapus?');">Hapus</a>
+                <form method="POST" action="hapus_baju.php" style="display:inline" onsubmit="return confirm('Yakin ingin menghapus?');">
+                  <input type="hidden" name="id" value="<?php echo intval($row['id']); ?>">
+                  <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8'); ?>">
+                  <button type="submit" class="text-red-600 hover:underline bg-transparent border-0 p-0">Hapus</button>
+                </form>
               </td>
             </tr>
           <?php endwhile; ?>

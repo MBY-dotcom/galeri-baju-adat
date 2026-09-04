@@ -1,9 +1,31 @@
 <?php
-$koneksi = new mysqli("localhost", "root", "", "db_bajuadat");
+session_start();
+require_once 'app/config/koneksi.php';
 
-// Ambil data baju berdasarkan ID
-$id = $_GET['id'];
-$data = $koneksi->query("SELECT * FROM koleksi_baju WHERE id = $id")->fetch_assoc();
+if (!isset($_SESSION['admin_login']) || $_SESSION['admin_login'] !== true) {
+  header('Location: login.php');
+  exit;
+}
+
+if (!isset($_GET['id'])) {
+  echo 'ID tidak ditemukan.';
+  exit;
+}
+
+$id = intval($_GET['id']);
+$stmt = $koneksi->prepare('SELECT * FROM koleksi_baju WHERE id = ?');
+$stmt->bind_param('i', $id);
+$stmt->execute();
+$res = $stmt->get_result();
+if (!$res || $res->num_rows === 0) {
+  echo 'Data tidak ditemukan.';
+  exit;
+}
+$data = $res->fetch_assoc();
+
+// ensure CSRF token
+if (empty($_SESSION['csrf_token'])) $_SESSION['csrf_token'] = bin2hex(random_bytes(16));
+$csrf = $_SESSION['csrf_token'];
 ?>
 
 <!DOCTYPE html>
@@ -19,31 +41,32 @@ $data = $koneksi->query("SELECT * FROM koleksi_baju WHERE id = $id")->fetch_asso
     <h1 class="text-2xl font-bold mb-6 text-indigo-700">✏️ Edit Data Baju</h1>
 
     <form action="update_baju.php" method="post" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-md space-y-4">
-      <input type="hidden" name="id" value="<?= $data['id']; ?>">
+      <input type="hidden" name="id" value="<?= intval($data['id']); ?>">
+      <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8'); ?>">
 
       <div>
         <label class="block mb-1 font-medium">Nama Baju</label>
-        <input type="text" name="nama" value="<?= $data['nama']; ?>" required class="w-full border rounded px-3 py-2">
+        <input type="text" name="nama" value="<?= htmlspecialchars($data['nama'], ENT_QUOTES, 'UTF-8'); ?>" required class="w-full border rounded px-3 py-2">
       </div>
 
       <div>
         <label class="block mb-1 font-medium">Kategori</label>
-        <input type="text" name="kategori" value="<?= $data['kategori']; ?>" required class="w-full border rounded px-3 py-2">
+        <input type="text" name="kategori" value="<?= htmlspecialchars($data['kategori'], ENT_QUOTES, 'UTF-8'); ?>" required class="w-full border rounded px-3 py-2">
       </div>
 
       <div>
         <label class="block mb-1 font-medium">Ukuran</label>
-        <input type="text" name="ukuran" value="<?= $data['ukuran']; ?>" required class="w-full border rounded px-3 py-2">
+        <input type="text" name="ukuran" value="<?= htmlspecialchars($data['ukuran'], ENT_QUOTES, 'UTF-8'); ?>" required class="w-full border rounded px-3 py-2">
       </div>
 
       <div>
         <label class="block mb-1 font-medium">Deskripsi</label>
-        <textarea name="deskripsi" required class="w-full border rounded px-3 py-2"><?= $data['deskripsi']; ?></textarea>
+        <textarea name="deskripsi" required class="w-full border rounded px-3 py-2"><?= htmlspecialchars($data['deskripsi'], ENT_QUOTES, 'UTF-8'); ?></textarea>
       </div>
 
       <div>
         <label class="block mb-1 font-medium">Gambar Sekarang</label>
-        <img src="gambar/<?= $data['gambar']; ?>" alt="" class="w-32 h-32 object-cover rounded mb-2">
+        <img src="gambar/<?= htmlspecialchars($data['gambar'], ENT_QUOTES, 'UTF-8'); ?>" alt="" class="w-32 h-32 object-cover rounded mb-2">
         <input type="file" name="gambar" class="block">
         <small class="text-gray-500 text-sm">Kosongkan jika tidak ingin mengganti gambar.</small>
       </div>
